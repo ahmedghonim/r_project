@@ -4,6 +4,8 @@ FROM rstudio/plumber:latest
 # Set the working directory
 WORKDIR /app
 
+RUN Rscript -e "install.packages(c('logger', 'tictoc', 'fs'), repos = 'https://cran.rstudio.com/')"
+
 # Copy the Plumber API script into the container
 COPY . /app
 

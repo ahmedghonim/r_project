@@ -8,6 +8,7 @@ status <- function(){
   )
 }
 
+#' this is a test for api
 #' @post /post_message
 #' @param date The date parameter (format: "YYYY-MM-DD")
 #' @param message The message parameter
