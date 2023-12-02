@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  rplumber:
+    build: .
+    container_name: r-plumber
+    volumes:
+      - ./:/app
+      - ./api.R:/app/api.R
+    ports:
+      - "8000:8000"
