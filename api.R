@@ -1,7 +1,9 @@
 library(plumber)
-library(dplyr)
+library(tidyverse)
 library(uxstats)
 library(jsonlite)
+
+
 #* get the status of the api
 #* @get /health-check
 status <- function(){
@@ -147,8 +149,7 @@ PrePost_to_MeanSD<-function(df){
 Validate_requirements<-function(funcIDs, df, mandatory){
   #Check whether each entry satisfies the mandatory inputs
   #assign the proper function ID to valid entries
-  browser()
-  
+
   df<-df%>%mutate(invalid=0, func="")
   available_funcs<-mandatory[funcIDs,]%>% select(1,7:ncol(mandatory))
   available_funcs<- available_funcs %>%  rowwise() %>% 
@@ -185,45 +186,46 @@ Validate_requirements<-function(funcIDs, df, mandatory){
 Task_manager<-function( df, mandatory_inputs, funcIDs, current_outputs, current_prepost ){
   #make sure output columns exist in data // pre-processing step
 
-  df<-fromJSON(df)
-  mandatory_inputs<-fromJSON(mandatory_inputs)
-  funcIDs<-fromJSON(funcIDs)
-  current_outs<-as.vector(fromJSON(current_outputs))
-  output_placeholder_indices<-match(current_outs,colnames(df))
-  current_prepost<-fromJSON(current_prepost)
-
-  old_colnames<-colnames(df)
-  
-  if(sum(is.na(output_placeholder_indices))){
-    for(out in 1:length(output_placeholder_indices)){
-      
-      if(is.na(output_placeholder_indices[out])){
-        df<-cbind(
-          rep(NA,nrow(df)),
-          df
-        )
+    df<-fromJSON(df)
+    mandatory_inputs<-fromJSON(mandatory_inputs)
+    funcIDs<-fromJSON(funcIDs)
+    current_outs<-as.vector(fromJSON(current_outputs))
+    output_placeholder_indices<-match(current_outs,colnames(df))
+    current_prepost<-fromJSON(current_prepost)
+    
+    old_colnames<-colnames(df)
+    
+    if(sum(is.na(output_placeholder_indices))){
+      for(out in 1:length(output_placeholder_indices)){
+        
+        if(is.na(output_placeholder_indices[out])){
+          df<-cbind(
+            rep(NA,nrow(df)),
+            df
+          )
+        }
+        
       }
-      
+      colnames(df)<-c(current_outs[is.na(output_placeholder_indices)], old_colnames)
     }
-    colnames(df)<-c(current_outs[is.na(output_placeholder_indices)], old_colnames)
-  }
-  
-  validated_df<-Validate_requirements(funcIDs, df, mandatory_inputs)%>%rowid_to_column("ID")
-  
-  
-  ready_rows<-validated_df%>%filter_at(vars(current_outs), all_vars(!is.na(.)))
-  valid_rows<-validated_df%>%filter(invalid==0)
-  invalid_rows<-validated_df%>%filter(invalid!=0 ,  !(ID %in% ready_rows$ID))
-  for(v in 1:nrow(valid_rows)){
-    valid_rows[v,]<-do.call(valid_rows$func[v], list(valid_rows[v,]))
-  }
-  
-  output_df<-rbind(ready_rows,valid_rows,invalid_rows)%>%arrange(ID)
-  
-  if(current_prepost){
-    output_df<-PrePost_to_MeanSD(output_df)
-  }
-  
-  
-  return(output_df)
+    
+    validated_df<-Validate_requirements(funcIDs, df, mandatory_inputs)%>%rowid_to_column("ID")
+    
+    
+    ready_rows<-validated_df%>%filter_at(vars(current_outs), all_vars(!is.na(.)))
+    valid_rows<-validated_df%>%filter(invalid==0)
+    invalid_rows<-validated_df%>%filter(invalid!=0 ,  !(ID %in% ready_rows$ID))
+    for(v in 1:nrow(valid_rows)){
+      valid_rows[v,]<-do.call(valid_rows$func[v], list(valid_rows[v,]))
+    }
+    
+    output_df<-rbind(ready_rows,valid_rows,invalid_rows)%>%arrange(ID)
+    
+    if(current_prepost){
+      output_df<-PrePost_to_MeanSD(output_df)
+    }
+    
+    
+    return(output_df)
+
 }
