@@ -12,8 +12,7 @@ status <- function(){
   )
 }
 
-#[1,4,7,10] 
-#[{"Study":"dfsf","Mean":56,"SD":"NA","SE":5,"N":45,"Median":"NA","q1":"NA","q3":"NA","min":"NA","max":"NA","upper":"NA","lower":"NA"}] 
+
 
 
 #' this is a test for api
@@ -132,7 +131,7 @@ calc_CCoef<-function(df){
 PrePost_to_MeanSD<-function(df){
   #change into pre, post Means and SDs
   prepared_df<-prepare_prepost(df)
-  browser()
+
   ccoef=calc_CCoef(prepared_df)
   
   out<-prepared_df%>%mutate(changeMean=postMean-preMean,
@@ -143,7 +142,57 @@ PrePost_to_MeanSD<-function(df){
   
 }
 
+calculate_prop<-function(df){
+  m.prop<-metaprop(N,N_total,studlab = Study_ID ,df)
+  return  (cbind(df, TE=m.prop$TE,seTE=m.prop$seTE) )
+  
+  
+}
 
+prepare_groups<-function(df, data_type){
+  
+  
+  #data_type 0:binary  1:continuous
+  if(data_type){
+    group1<-df%>% filter(group_ID==1) %>% rename(Mean1=Mean, SD1=SD, N1=N)
+    group2<-df%>% filter(group_ID==2) %>% rename(Mean2=Mean, SD2=SD, N2=N)
+  }
+  else{
+    group1<-df%>% filter(group_ID==1) %>% rename(N1=N, total1=N_total)
+    group2<-df%>% filter(group_ID==2) %>% rename(N2=N, total2=N_total)
+  }
+  #arrange studies with groups
+  
+  #Raise an error if unequal number of studies
+  assertthat::are_equal(nrow(group1),
+                        nrow(group2))
+  
+  return(
+    cbind(group1, group2)
+  )
+}
+
+calculate_bin<-function(df){
+  df<-prepare_groups(df,0)
+  m.bin<-metabin(N1, total1,
+                 N2, total2,
+                 df, incr = "TACC",studlab = Study_ID)
+  
+  #return  (cbind(df, TE=m.bin$TE,seTE=m.bin$seTE) )
+  return(df)
+  
+}
+
+calculate_cont<-function(df){
+  df<-prepare_groups(df,1)
+  m.cont<-metacont(N1,Mean1,SD1,
+                   N2,Mean2,SD2,
+                   studlab = studlab ,df)
+  
+  return  (cbind(df, TE=m.cont$TE,seTE=m.cont$seTE) )
+  
+  
+}
 
 
 Validate_requirements<-function(funcIDs, df, mandatory){
@@ -229,3 +278,147 @@ Task_manager<-function( df, mandatory_inputs, funcIDs, current_outputs, current_
     return(output_df)
 
 }
+
+
+
+
+
+
+
+
+
+#Filters
+
+
+Rename_variables<-function(input_params, df_names, current_groups, current_prepost){
+  
+  
+  inputs<-input_params
+  df_names<-df_names
+  
+  pp<-current_prepost
+  n=current_groups
+  
+  g1=ifelse(n==1,1,0)
+  g2=ifelse(n==2,1,0)
+  g3=ifelse(n>2,1,0)
+  
+  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3+`) )
+  
+  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3+`== g3)
+  
+  final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
+  
+  inds<-match(inputs,final_names$internal)
+  return (rbind(inputs,final_names$ui[inds]))
+  
+}
+
+#' check eligible functions for given groups and prepost
+#' @post /eligible_functions
+#' @param available JSON object of The dataframe containing available inputs for given groups and prepost
+#' @param mandatory JSON object of the inputs required for every function
+#' @param df_names JSON object of user-friendly names for all input parameters
+#' @param current_groups The number of current groups
+#' @param current_prepost Whether there's prepost data
+#' @return JSON object containing Available Input parameters for all eligible functions
+#' @serializer json list(na="string")
+function(available, mandatory, df_names, current_groups, current_prepost){
+  mandatory<-fromJSON(mandatory)
+  available<-fromJSON(available)
+  df_names<-fromJSON(df_names)
+  
+  pp<-fromJSON(current_prepost)
+  n=fromJSON(current_groups)
+  
+  g1=ifelse(n==1,1,0)
+  g2=ifelse(n==2,1,0)
+  g3=ifelse(n>2,1,0)
+  
+  eligible_functions<-mandatory%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3+`== g3) %>% select(`ID`,`Function`)
+  
+  inds=match(eligible_functions$`Function`,available$`Function`)
+  
+  eligible_functions$ID
+  
+  final_df<-available[inds,]
+  inputs<-colnames(
+    final_df%>%
+      select(2:ncol(final_df)) %>%
+      select(which(colSums(.)>0))
+  )
+  
+  Renamed_vars<-Rename_variables(inputs, df_names, n, pp)
+  
+  return(
+    list(Renamed_vars,
+         eligible_functions$ID)
+  )
+  
+}  
+
+
+
+#' Check if user inputs satisfies mandatory functions' parameters
+#' @post /Func_IDs
+#' @param input_params JSON object of The IDs from eligible_functions
+#' @param user_inputs JSON object of The dataframe containing user-chosen input variables
+#' @param mandatory JSON object of the inputs requireds for every function
+#' @param output_df JSON object of the outputs of all function
+#' @serializer json list(na="string")
+function(input_params, user_inputs, mandatory ,output_df){
+  funcs<-fromJSON(input_params)
+  mandatory<-fromJSON(mandatory)
+  outs<-fromJSON(user_inputs)
+  output<-fromJSON(output_df)
+  
+  available_funcs<-mandatory[funcs,]%>% select(1,7:ncol(mandatory))
+  available_funcs<- available_funcs %>%  rowwise() %>% 
+    mutate(original=sum( c_across(2: ncol(available_funcs) ) ), current=0 )
+  cols<- match(outs, colnames(available_funcs))
+  
+  for (i in 1:nrow(available_funcs)) {
+    row<-available_funcs[i,]
+    
+    available_funcs$current[i]=sum(as.numeric(row[cols]) & rep(1, length(outs)))
+    
+  }
+  
+  
+  final_iDs<-unlist(available_funcs %>% filter(original== current) %>% select(ID))
+  
+  return(list(mandatory$`Function`[final_iDs],final_iDs))
+  
+}  
+
+
+
+#' Check available outputs of given function IDs given be Func_IDs
+#' @post /Output_variables
+#' @param funcIDs JSON object for IDs from Func_IDs
+#' @param mandatory_inputs JSON object of the inputs requireds for every function
+#' @param output_df JSON object of the outputs of all function
+#' @return JSON object containing output variables
+#' @serializer json list(na="string")
+function(funcIDs, mandatory_inputs ,output_df){
+  
+  final_iDs<-fromJSON(funcIDs)
+  mandatory<-fromJSON(mandatory_inputs)
+  output<-fromJSON(output_df)
+  
+  out_iDs<-match(mandatory$`Function`[final_iDs],output$`Function`)
+  
+  
+  return(
+    list(
+      colnames(
+        output[out_iDs,]%>%
+          select(2:ncol(output)) %>%
+          select(which(colSums(.)>0))
+      )
+    )
+  )
+  
+}   
+
+
