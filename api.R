@@ -1,8 +1,41 @@
 library(plumber)
-library(dplyr)
+library(tidyverse)
 library(uxstats)
 library(jsonlite)
-print("i'm alive")
+library(DBI)
+library(readxl)
+
+mydb <- dbConnect(RSQLite::SQLite(), "globals.sqlite")
+
+# Create db from globals.xlsx
+# available <- read_excel("globals.xlsx",
+#                                sheet = "Input") %>%
+#   mutate(
+#     across(everything(), ~replace_na(.x, 0))
+#   )
+# mandatory <- read_excel("globals.xlsx",
+#                                sheet = "Mandatory") %>%
+#   mutate(
+#     across(everything(), ~replace_na(.x, 0))
+#   ) %>% rowid_to_column(var="ID")
+# output_df <- read_excel("globals.xlsx",
+#                                 sheet = "Output")%>%
+#   mutate(
+#     across(everything(), ~replace_na(.x, 0))
+#   )
+# 
+# df_names <- read_excel("globals.xlsx",
+#                              sheet = "Names") %>% rowid_to_column(var="ID")
+# 
+# dbWriteTable(mydb, "available", available)
+# dbWriteTable(mydb, "mandatory", mandatory)
+# dbWriteTable(mydb, "output_df", output_df)
+# dbWriteTable(mydb, "df_names", df_names)
+
+available<- dbReadTable(mydb, "available")
+mandatory <- dbReadTable(mydb, "mandatory")
+output_df <- dbReadTable(mydb, "output_df")
+df_names <- dbReadTable(mydb, "df_names")
 
 #* get the status of the api
 #* @get /health-check
@@ -226,17 +259,16 @@ Validate_requirements<-function(funcIDs, df, mandatory){
 #' Convert Standard error and sample size into Standard Deviation
 #' @post /Task_manager
 #' @param df JSON object of The dataframe containing user input
-#' @param mandatory_inputs JSON object of the inputs requireds for every function
 #' @param funcIDs JSON object of the indices of valid functions in mandatory_inputs
 #' @param current_outputs JSON object of The outputs of current funcIDs
 #' @param current_prepost Whether there's prepost data
 #' @return JSON object containing final result of the api call
 #' @serializer json list(na="string")
-Task_manager<-function( df, mandatory_inputs, funcIDs, current_outputs, current_prepost ){
+Task_manager<-function( df, funcIDs, current_outputs, current_prepost ){
   #make sure output columns exist in data // pre-processing step
 
     df<-fromJSON(df)
-    mandatory_inputs<-fromJSON(mandatory_inputs)
+    mandatory_inputs<-mandatory
     funcIDs<-fromJSON(funcIDs)
     current_outs<-as.vector(fromJSON(current_outputs))
     output_placeholder_indices<-match(current_outs,colnames(df))
@@ -303,9 +335,9 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
   
-  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3+`) )
+  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) )
   
-  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3+`== g3)
+  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3)
   
   final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
   
@@ -316,18 +348,12 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
 
 #' check eligible functions for given groups and prepost
 #' @post /eligible_functions
-#' @param available JSON object of The dataframe containing available inputs for given groups and prepost
-#' @param mandatory JSON object of the inputs required for every function
-#' @param df_names JSON object of user-friendly names for all input parameters
 #' @param current_groups The number of current groups
 #' @param current_prepost Whether there's prepost data
 #' @return JSON object containing Available Input parameters for all eligible functions
 #' @serializer json list(na="string")
-function(available, mandatory, df_names, current_groups, current_prepost){
-  mandatory<-fromJSON(mandatory)
-  available<-fromJSON(available)
-  df_names<-fromJSON(df_names)
-  
+function(current_groups, current_prepost){
+
   pp<-fromJSON(current_prepost)
   n=fromJSON(current_groups)
   
@@ -335,7 +361,7 @@ function(available, mandatory, df_names, current_groups, current_prepost){
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
   
-  eligible_functions<-mandatory%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3+`== g3) %>% select(`ID`,`Function`)
+  eligible_functions<-mandatory%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3) %>% select(`ID`,`Function`)
   
   inds=match(eligible_functions$`Function`,available$`Function`)
   
@@ -363,14 +389,11 @@ function(available, mandatory, df_names, current_groups, current_prepost){
 #' @post /Func_IDs
 #' @param input_params JSON object of The IDs from eligible_functions
 #' @param user_inputs JSON object of The dataframe containing user-chosen input variables
-#' @param mandatory JSON object of the inputs requireds for every function
-#' @param output_df JSON object of the outputs of all function
 #' @serializer json list(na="string")
-function(input_params, user_inputs, mandatory ,output_df){
+function(input_params, user_inputs){
   funcs<-fromJSON(input_params)
-  mandatory<-fromJSON(mandatory)
   outs<-fromJSON(user_inputs)
-  output<-fromJSON(output_df)
+  output<- output_df
   
   available_funcs<-mandatory[funcs,]%>% select(1,7:ncol(mandatory))
   available_funcs<- available_funcs %>%  rowwise() %>% 
@@ -396,15 +419,12 @@ function(input_params, user_inputs, mandatory ,output_df){
 #' Check available outputs of given function IDs given be Func_IDs
 #' @post /Output_variables
 #' @param funcIDs JSON object for IDs from Func_IDs
-#' @param mandatory_inputs JSON object of the inputs requireds for every function
-#' @param output_df JSON object of the outputs of all function
 #' @return JSON object containing output variables
 #' @serializer json list(na="string")
-function(funcIDs, mandatory_inputs ,output_df){
+function(funcIDs){
   
   final_iDs<-fromJSON(funcIDs)
-  mandatory<-fromJSON(mandatory_inputs)
-  output<-fromJSON(output_df)
+  output<- output_df
   
   out_iDs<-match(mandatory$`Function`[final_iDs],output$`Function`)
   
