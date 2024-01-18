@@ -1,8 +1,8 @@
 library(plumber)
-library(tidyverse)
+library(dplyr)
 library(uxstats)
 library(jsonlite)
-
+print("i'm alive")
 
 #* get the status of the api
 #* @get /health-check
