@@ -1,6 +1,17 @@
 version: "3"
 
 services:
+  fornt:
+    build: ./front-end
+    container_name: front-end
+    volumes:
+      - ./front-end:./front-end
+    ports:
+      - 3000:3000
+    networks:
+      - rplumber-network
+    env_file:
+      - ./front-end/.env
   rplumber:
     build: .
     container_name: r-plumber
@@ -9,7 +20,7 @@ services:
       - ./api.R:/app/api.R
     ports:
       - 8000:8000
-    mem_limit: 1g  
+    mem_limit: 1g
     networks:
       - rplumber-network
   ngnix:
