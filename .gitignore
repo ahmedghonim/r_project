@@ -2,4 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-./frontend/node_modules
+front-end/node_modules
