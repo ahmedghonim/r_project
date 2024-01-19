@@ -1,15 +1,17 @@
 version: "3.9"
 
 services:
-  # fornt:
-  #   build: ./front-end
-  #   container_name: front-end
-  #   volumes:
-  #     - ./:./app
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - rplumber-network
+  fornt:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: front-end
+    volumes:
+      - ./:./front-end
+    ports:
+      - 3000:3000
+    networks:
+      - rplumber-network
   rplumber:
     build: .
     container_name: r-plumber
