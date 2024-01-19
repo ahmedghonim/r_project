@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-WORKDIR /front-end
+WORKDIR /app
 
 COPY package.json yarn.lock ./
 

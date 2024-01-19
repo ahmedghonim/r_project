@@ -5,13 +5,11 @@ services:
     build: ./front-end
     container_name: front-end
     volumes:
-      - ./front-end:./front-end
+      - ./:./app
     ports:
       - 3000:3000
     networks:
       - rplumber-network
-    env_file:
-      - ./front-end/.env
   rplumber:
     build: .
     container_name: r-plumber
