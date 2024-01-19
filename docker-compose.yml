@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: front-end
     volumes:
-      - ./:./front-end
+      - ./fron-end:/app
     ports:
       - 3000:3000
     networks:
