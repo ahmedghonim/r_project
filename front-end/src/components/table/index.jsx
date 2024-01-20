@@ -39,10 +39,6 @@ export const Table = () => {
           Save data
         </button>
       </div>
-
-      {/* <output className="console" id="output">
-        {output}
-      </output> */}
     </div>
   )
 }

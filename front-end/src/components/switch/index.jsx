@@ -1,9 +1,9 @@
 const Switch = (props) => {
-  const { extra, color, ...rest } = props;
+  const { extra, color, ...rest } = props
   return (
     <input
       type="checkbox"
-      className={`relative h-5 w-10 appearance-none rounded-[20px] bg-[#e0e5f2] outline-none transition duration-[0.5s] 
+      className={`relative h-5 w-10 appearance-none rounded-[20px] !bg-gray-500 outline-none transition duration-[0.5s] 
       before:absolute before:top-[50%] before:h-4 before:w-4 before:translate-x-[2px] before:translate-y-[-50%] before:rounded-[20px]
       before:bg-white before:shadow-[0_2px_5px_rgba(0,_0,_0,_.2)] before:transition before:content-[""]
       checked:before:translate-x-[22px] hover:cursor-pointer
@@ -11,7 +11,7 @@ const Switch = (props) => {
         color === "red"
           ? "checked:bg-red-500 dark:checked:bg-red-400"
           : color === "blue"
-          ? "checked:bg-blue-500 dark:checked:bg-blue-400"
+          ? "checked:!bg-blue-500 dark:checked:bg-blue-400"
           : color === "green"
           ? "checked:bg-green-500 dark:checked:bg-green-400"
           : color === "yellow"
@@ -41,7 +41,7 @@ const Switch = (props) => {
       name="weekly"
       {...rest}
     />
-  );
-};
+  )
+}
 
-export default Switch;
+export default Switch
