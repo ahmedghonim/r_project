@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input.defaultCheckbox::before {
+  color: white;
+  opacity: 0;
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0px);
+}
+
+td.custom-cell {
+  color: #fff;
+  background-color: #37bc6c;
+}
+.custom-table thead th:nth-child(even),
+.custom-table tbody tr:nth-child(odd) th {
+  background-color: #d7f1e1;
+}

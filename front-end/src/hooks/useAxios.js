@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import axios from "axios";
+import axios from "axios"
 
 /**
  * @param apiType default is salon
@@ -8,13 +8,13 @@ import axios from "axios";
  */
 const useAxios = ({ contentType = "application/json" }) => {
   return axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: "/api",
     headers: {
       "Content-Type": contentType,
       accept: "application/json",
     },
     withCredentials: false,
-  });
-};
+  })
+}
 
-export default useAxios;
+export default useAxios

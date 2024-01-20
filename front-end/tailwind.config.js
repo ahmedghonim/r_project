@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       width: {
@@ -324,5 +323,5 @@ module.exports = {
       },
     }),
   },
-  plugins: [require("tailwindcss-rtl")],
-};
+  plugins: [],
+}

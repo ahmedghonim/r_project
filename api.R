@@ -25,7 +25,7 @@ function(req){
 }
 
 #* get the status of the api
-#* @get /health-check
+#* @get /api/health-check
 status <- function(){
   list(
     status = "API Is Runing "
@@ -36,7 +36,7 @@ status <- function(){
 
 
 #' this is a test for api
-#' @post /post_message
+#' @post /api/post_message
 #' @param date The date parameter (format: "YYYY-MM-DD")
 #' @param message The message parameter
 #' @return JSON object with the provided date and message
@@ -72,7 +72,7 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
 }
 
 #' check eligible functions for given groups and prepost
-#' @post /eligible_functions
+#' @post /api/eligible_functions
 #' @param current_groups The number of current groups
 #' @param current_prepost Whether there's prepost data
 #' @return JSON object containing Available Input parameters for all eligible functions
@@ -110,7 +110,7 @@ function(current_groups, current_prepost){
 
 
 #' Check if user inputs satisfies mandatory functions' parameters
-#' @post /Func_IDs
+#' @post /api/Func_IDs
 #' @param input_params JSON object of The IDs from eligible_functions
 #' @param user_inputs JSON object of The dataframe containing user-chosen input variables
 #' @serializer json list(na="string")
@@ -141,7 +141,7 @@ function(input_params, user_inputs){
 
 
 #' Check available outputs of given function IDs given be Func_IDs
-#' @post /Output_variables
+#' @post /api/Output_variables
 #' @param funcIDs JSON object for IDs from Func_IDs
 #' @return JSON object containing output variables
 #' @serializer json list(na="string")

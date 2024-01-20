@@ -1,19 +1,19 @@
-import { useState, useRef } from "react";
-import { HotTable } from "@handsontable/react";
-import { registerAllModules } from "handsontable/registry";
-import "handsontable/dist/handsontable.full.css";
+import { useState, useRef } from "react"
+import { HotTable } from "@handsontable/react"
+import { registerAllModules } from "handsontable/registry"
+import "handsontable/dist/handsontable.full.css"
 
 // register Handsontable's modules
-registerAllModules();
+registerAllModules()
 
 export const Table = () => {
-  const hotRef = useRef(null);
-  const [output, setOutput] = useState('Click "Load" to load data from server');
+  const hotRef = useRef(null)
+  const [output, setOutput] = useState('Click "Load" to load data from server')
 
   const saveClickCallback = () => {
-    setOutput("Data saved");
-    console.log("The POST request is only used here for the demo purposes");
-  };
+    setOutput("Data saved")
+    console.log("The POST request is only used here for the demo purposes")
+  }
 
   return (
     <div className="flex flex-col">
@@ -44,5 +44,5 @@ export const Table = () => {
         {output}
       </output> */}
     </div>
-  );
-};
+  )
+}
