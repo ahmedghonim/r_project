@@ -1,6 +1,6 @@
-import SectionTitle from "../Common/SectionTitle";
-import SingleFeature from "./SingleFeature";
-import featuresData from "./featuresData";
+import SectionTitle from "../Common/SectionTitle"
+import SingleFeature from "./SingleFeature"
+import featuresData from "./featuresData"
 
 const Features = () => {
   return (
@@ -9,7 +9,7 @@ const Features = () => {
         <div className="container">
           <SectionTitle
             title="Main Features"
-            paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+            paragraph='While this sheet improved data prep, like other tools, it converted values individually: Intervention & control groups, pre- & post-intervention, then calculating M & SD change. We needed a tool offering several conversions combined with simultaneous conversion of an outcome data per study in a single step. This sparked the development of the "IMedRA-ACR conversion tool," condensing 5-10 steps into one. It featured:'
             center
           />
 
@@ -21,7 +21,7 @@ const Features = () => {
         </div>
       </section>
     </>
-  );
-};
+  )
+}
 
-export default Features;
+export default Features
