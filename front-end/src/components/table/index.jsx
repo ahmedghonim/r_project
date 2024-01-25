@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import { HotTable } from "@handsontable/react"
 import { registerAllModules } from "handsontable/registry"
 import "handsontable/dist/handsontable.full.css"
@@ -6,39 +6,30 @@ import "handsontable/dist/handsontable.full.css"
 // register Handsontable's modules
 registerAllModules()
 
-export const Table = () => {
+const Table = ({ setGetDataTable, selectedCategory }) => {
   const hotRef = useRef(null)
-  const [output, setOutput] = useState('Click "Load" to load data from server')
-
-  const saveClickCallback = () => {
-    setOutput("Data saved")
-    console.log("The POST request is only used here for the demo purposes")
-  }
 
   return (
-    <div className="flex flex-col">
+    <>
       <HotTable
+        colHeaders={selectedCategory.map((item) => item.label)}
         ref={hotRef}
-        startRows={8}
-        startCols={6}
-        rowHeaders={true}
-        colHeaders={true}
-        height="auto"
-        autoWrapRow={true}
+        startRows={1}
+        columns={selectedCategory.map((item) => item.label)}
+        width="100%"
+        startCols={selectedCategory.map((item) => item.label).length}
         autoWrapCol={true}
+        rowHeaders={true}
         licenseKey="non-commercial-and-evaluation"
+        afterChange={() => {
+          if (hotRef.current) {
+            const hot = hotRef.current?.hotInstance
+            setGetDataTable(hot.getData())
+          }
+        }}
       />
-
-      <div className="controls">
-        &nbsp;
-        <button
-          className="linear mt-1 flex items-center justify-center gap-2 rounded-lg bg-blueSecondary p-1 text-white transition duration-200 hover:cursor-pointer  active:bg-opacity-70"
-          id="save"
-          onClick={(...args) => saveClickCallback(...args)}
-        >
-          Save data
-        </button>
-      </div>
-    </div>
+    </>
   )
 }
+
+export default Table

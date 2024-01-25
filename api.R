@@ -189,7 +189,7 @@ function(pr) {
  
     
   pr %>% pr_hook("preroute",cors) %>% 
-    pr_mount("/scripts", plumb("./routes/base_scripts.R"))
+    pr_mount("/api/scripts", plumb("./routes/base_scripts.R"))
 }
 
 
