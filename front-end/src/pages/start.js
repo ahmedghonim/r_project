@@ -9,7 +9,6 @@ import ReactSelect from "react-select"
 import Header from "@/components/Header"
 import ScrollUp from "@/components/Common/ScrollUp"
 import { zipObject } from "lodash"
-
 const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
@@ -78,16 +77,17 @@ export default function Home() {
       console.log(e)
     }
   }
-
+  console.log("category >>>> ", category)
   async function handleScripts() {
     const values = selectedCategory.map((item) => item.value)
     const df = getDataTable.map((row) => {
       let newRow = row.map((item) => item || "NA")
-      newRow=newRow.map(item=>typeof item === "number"? parseFloat(item): item );
+      newRow = newRow.map((item) =>
+        typeof item === "number" ? parseFloat(item) : item
+      )
       return zipObject(values, newRow)
     })
 
-    console.log("df >>>> ", df)
     try {
       const { data } = await mutateHandleScripts({
         df: JSON.stringify(df),
@@ -106,53 +106,73 @@ export default function Home() {
       <ScrollUp />
 
       <div className="px-20 relative z-10 pt-28">
+        <button
+          onClick={() => {
+            setFirstInput({
+              current_prepost: "0",
+            })
+            setCategory([])
+            setSelectedCategory([])
+            setSelectTypes([])
+            setInputParams(null)
+            setFuncIdsValues(null)
+            setOutputVariables(null)
+            setGetDataTable([])
+          }}
+          className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+        >
+          Reset
+        </button>
         <div className=" flex flex-grow items-end gap-14">
-          <div className="flex items-center gap-3">
-            <Switch
-              color="blue"
-              id="current_prepost"
-              name="current_prepost"
-              onChange={(e) => {
-                console.log(e.target.checked)
+          {category.length < 1 && (
+            <>
+              <div className="flex items-center gap-3">
+                <Switch
+                  color="blue"
+                  id="current_prepost"
+                  name="current_prepost"
+                  onChange={(e) => {
+                    console.log(e.target.checked)
 
-                setFirstInput({
-                  ...firstInput,
-                  current_prepost: e.target.checked ? "1" : "0",
-                })
-              }}
-            />
-            <label
-              for="current_prepost"
-              className="cursor-pointer text-base font-medium text-dark"
-            >
-              Current Prepost
-            </label>
-          </div>
-          <div className="w-[150px]">
-            <InputField
-              label="Current Groups"
-              name="current_groups"
-              max={10}
-              min={0}
-              value={+firstInput.current_groups}
-              type="number"
-              onChange={(e) => {
-                setFirstInput({
-                  ...firstInput,
-                  current_groups: e.target.value.toString(),
-                })
-              }}
-            />
-          </div>
-          {category.length === 0 && (
-            <div>
-              <button
-                onClick={handleFirstInput}
-                className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
-              >
-                Next
-              </button>
-            </div>
+                    setFirstInput({
+                      ...firstInput,
+                      current_prepost: e.target.checked ? "1" : "0",
+                    })
+                  }}
+                />
+                <label
+                  for="current_prepost"
+                  className="cursor-pointer text-base font-medium text-dark"
+                >
+                  Current Prepost
+                </label>
+              </div>
+              <div className="w-[150px]">
+                <InputField
+                  label="Current Groups"
+                  name="current_groups"
+                  max={10}
+                  min={0}
+                  value={+firstInput.current_groups}
+                  type="number"
+                  onChange={(e) => {
+                    setFirstInput({
+                      ...firstInput,
+                      current_groups: e.target.value.toString(),
+                    })
+                  }}
+                />
+              </div>
+
+              <div>
+                <button
+                  onClick={handleFirstInput}
+                  className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+                >
+                  Next
+                </button>
+              </div>
+            </>
           )}
           {category.length !== 0 && (
             <div>
@@ -180,16 +200,14 @@ export default function Home() {
             </div>
           )}
           {selectedCategory.length !== 0 && (
-            <div>
-              <button
-                onClick={() => {
-                  handleFunc_IDs()
-                }}
-                className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
-              >
-                Next
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                handleFunc_IDs()
+              }}
+              className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+            >
+              Next
+            </button>
           )}
         </div>
 
