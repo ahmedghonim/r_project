@@ -152,7 +152,7 @@ export default function Home() {
                 />
                 <label
                   for="current_prepost"
-                  className="cursor-pointer text-base font-medium text-dark"
+                  className="cursor-pointer text-base font-medium text-white"
                 >
                   Current Prepost
                 </label>
@@ -169,6 +169,22 @@ export default function Home() {
                     setFirstInput({
                       ...firstInput,
                       current_groups: e.target.value.toString(),
+                    })
+                  }}
+                />
+              </div>
+              <div className="w-[150px]">
+                <InputField
+                  label="Category"
+                  name="numeric_input"
+                  max={10}
+                  min={0}
+                  value={+firstInput.numeric_input}
+                  type="number"
+                  onChange={(e) => {
+                    setFirstInput({
+                      ...firstInput,
+                      numeric_input: e.target.value.toString(),
                     })
                   }}
                 />
