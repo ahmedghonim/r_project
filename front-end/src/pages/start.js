@@ -15,6 +15,7 @@ export default function Home() {
   const [firstInput, setFirstInput] = useState({
     current_prepost: "0",
   })
+  const [openSelect, setOpenSelect] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState([])
   const [selectTypes, setSelectTypes] = useState([])
   const [inputParams, setInputParams] = useState(null)
@@ -179,6 +180,9 @@ export default function Home() {
                 }}
                 className="basic-multi-select w-[400px] z-10"
                 classNamePrefix="select"
+                onBlur={() => setOpenSelect(false)}
+                onFocus={() => setOpenSelect(true)}
+                menuIsOpen={openSelect}
               />
             </div>
           )}
