@@ -71,6 +71,9 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
   
 }
 
+
+
+
 #' check eligible functions for given groups and prepost
 #' @post /api/eligible_functions
 #' @param current_groups The number of current groups
@@ -80,7 +83,7 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
 function(current_groups, current_prepost){
   pp<-fromJSON(current_prepost)
   n=fromJSON(current_groups)
-  
+  browser()
   g1=ifelse(n==1,1,0)
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
@@ -89,7 +92,7 @@ function(current_groups, current_prepost){
   
   inds=match(eligible_functions$`Function`,available$`Function`)
   
-  eligible_functions$ID
+
   
   final_df<-available[inds,]
   inputs<-colnames(
@@ -97,12 +100,12 @@ function(current_groups, current_prepost){
       select(2:ncol(final_df)) %>%
       select(which(colSums(.)>0))
   )
-  
+  types<-df_names$type[match(inputs,df_names$internal)]
   Renamed_vars<-Rename_variables(inputs, df_names, n, pp)
   
   return(
     list(Renamed_vars,
-         eligible_functions$ID)
+         eligible_functions$ID, types)
   )
   
 }  

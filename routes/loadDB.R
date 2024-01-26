@@ -1,6 +1,6 @@
 mydb <- dbConnect(RSQLite::SQLite(), "../globals.sqlite")
 
-# Create db from globals.xlsx
+#Create db from globals.xlsx
 # available <- read_excel("globals.xlsx",
 #                                sheet = "Input") %>%
 #   mutate(
@@ -20,10 +20,10 @@ mydb <- dbConnect(RSQLite::SQLite(), "../globals.sqlite")
 # df_names <- read_excel("globals.xlsx",
 #                              sheet = "Names") %>% rowid_to_column(var="ID")
 # 
-# dbWriteTable(mydb, "available", available)
-# dbWriteTable(mydb, "mandatory", mandatory)
-# dbWriteTable(mydb, "output_df", output_df)
-# dbWriteTable(mydb, "df_names", df_names)
+# dbWriteTable(mydb, "available", available, overwrite=TRUE)
+# dbWriteTable(mydb, "mandatory", mandatory, overwrite=TRUE)
+# dbWriteTable(mydb, "output_df", output_df, overwrite=TRUE)
+# dbWriteTable(mydb, "df_names", df_names, overwrite=TRUE)
 
 available<- dbReadTable(mydb, "available")
 mandatory <- dbReadTable(mydb, "mandatory")

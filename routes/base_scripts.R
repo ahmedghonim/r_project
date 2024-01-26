@@ -198,6 +198,9 @@ Validate_requirements<-function(funcIDs, df, mandatory){
   return(df)
 }
 
+char_cols<-df_names%>%filter(type=="char")
+char_cols<-char_cols$internal
+
 #' Convert Standard error and sample size into Standard Deviation
 #' @post /Task_manager
 #' @param df JSON object of The dataframe containing user input
@@ -208,8 +211,9 @@ Validate_requirements<-function(funcIDs, df, mandatory){
 #' @serializer json list(na="string")
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost ){
   #make sure output columns exist in data // pre-processing step
-  
   df<-fromJSON(df)
+  df<-cbind(df%>%select(all_of(char_cols)),
+            df%>%select(!any_of(char_cols))%>%mutate_all(as.numeric))
   mandatory_inputs<-mandatory
   funcIDs<-fromJSON(funcIDs)
   current_outs<-as.vector(fromJSON(current_outputs))
