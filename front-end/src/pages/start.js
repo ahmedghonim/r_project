@@ -15,7 +15,9 @@ export default function Home() {
   const [firstInput, setFirstInput] = useState({
     current_prepost: "0",
   })
+  const [openSelect, setOpenSelect] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState([])
+  const [selectTypes, setSelectTypes] = useState([])
   const [inputParams, setInputParams] = useState(null)
   const [funcIdsValues, setFuncIdsValues] = useState(null)
   const [outputVariables, setOutputVariables] = useState(null)
@@ -54,6 +56,7 @@ export default function Home() {
       setInputParams(data[1])
 
       setCategory(categoryValue)
+      setSelectTypes(data[2])
     } catch (e) {
       console.log(e)
     }
@@ -114,8 +117,8 @@ export default function Home() {
             setCategory([])
             setSelectedCategory([])
             setSelectTypes([])
-            setInputParams(null)
-            setFuncIdsValues(null)
+            setInputParams([])
+            setFuncIdsValues([])
             setOutputVariables(null)
             setGetDataTable([])
           }}
@@ -196,6 +199,9 @@ export default function Home() {
                 }}
                 className="basic-multi-select w-[400px] z-10"
                 classNamePrefix="select"
+                onBlur={() => setOpenSelect(false)}
+                onFocus={() => setOpenSelect(true)}
+                menuIsOpen={openSelect}
               />
             </div>
           )}
@@ -210,19 +216,23 @@ export default function Home() {
             </button>
           )}
         </div>
-
-        <div className="mt-5 w-full">
-          <Table
-            selectedCategory={selectedCategory}
-            setGetDataTable={setGetDataTable}
-          />
-        </div>
-        <button
-          // className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
-          onClick={handleScripts}
-        >
-          Submit
-        </button>
+        {outputVariables && (
+          <>
+            <div className="mt-5 w-full">
+              <Table
+                selectedCategory={selectedCategory}
+                setGetDataTable={setGetDataTable}
+                selectTypes={selectTypes}
+              />
+            </div>
+            <button
+              // className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+              onClick={handleScripts}
+            >
+              Submit
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
