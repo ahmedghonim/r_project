@@ -25,17 +25,6 @@ services:
     mem_limit: 1g
     networks:
       - rplumber-network
-  ngnix:
-    container_name: nginx
-    image: nginx:stable-alpine
-    ports:
-      - 80:80
-    depends_on:
-      - rplumber
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - rplumber-network
 
 networks:
   rplumber-network:
