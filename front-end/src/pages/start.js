@@ -8,7 +8,8 @@ import Switch from "@/components/switch"
 import ReactSelect from "react-select"
 import Header from "@/components/Header"
 import ScrollUp from "@/components/Common/ScrollUp"
-import { zipObject } from "lodash"
+import { keys, zipObject } from "lodash"
+import { HotTable } from "@handsontable/react"
 const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
@@ -23,6 +24,7 @@ export default function Home() {
   const [outputVariables, setOutputVariables] = useState(null)
 
   const [getDataTable, setGetDataTable] = useState([])
+  const [tableResult, setTableResult] = useState([])
   const { mutateAsync, isLoading } = usePostQuery({
     url: "/eligible_functions",
   })
@@ -62,6 +64,7 @@ export default function Home() {
     }
   }
 
+  //FuncIDs
   async function handleFunc_IDs() {
     const categoryValue = selectedCategory.map((item) => {
       return item.value
@@ -80,7 +83,7 @@ export default function Home() {
       console.log(e)
     }
   }
-  console.log("category >>>> ", category)
+
   async function handleScripts() {
     const values = selectedCategory.map((item) => item.value)
     const df = getDataTable.map((row) => {
@@ -98,7 +101,10 @@ export default function Home() {
         current_outputs: JSON.stringify(outputVariables),
         current_prepost: firstInput.current_prepost,
       })
-      console.log(data)
+      // const columns = keys(data[0])
+      // const rows = data.map((row) => Object.values(row))
+
+      setTableResult(data)
     } catch (e) {
       console.log(e)
     }
@@ -121,12 +127,13 @@ export default function Home() {
             setFuncIdsValues([])
             setOutputVariables(null)
             setGetDataTable([])
+            setTableResult([])
           }}
-          className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+          className="linear rounded-[20px] my-10 bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
         >
           Reset
         </button>
-        <div className=" flex flex-grow items-end gap-14">
+        <div className="flex items-end gap-7">
           {category.length < 1 && (
             <>
               <div className="flex items-center gap-3">
@@ -177,46 +184,48 @@ export default function Home() {
               </div>
             </>
           )}
-          {category.length !== 0 && (
-            <div>
-              <label
-                htmlFor={"colors"}
-                className={`text-sm text-navy-700 text-white `}
-              >
-                Category
-              </label>
+          {category.length !== 0 && !outputVariables && (
+            <>
+              <div>
+                <label
+                  htmlFor={"colors"}
+                  className={`text-sm text-navy-700 text-white `}
+                >
+                  Category
+                </label>
 
-              <ReactSelect
-                isMulti
-                name="colors"
-                value={selectedCategory}
-                // filter if add in selectedCategory
-                options={category.filter(
-                  (item) => !selectedCategory.includes(item)
-                )}
-                onChange={(e) => {
-                  setSelectedCategory(e)
+                <ReactSelect
+                  isMulti
+                  name="colors"
+                  value={selectedCategory}
+                  // filter if add in selectedCategory
+                  options={category.filter(
+                    (item) => !selectedCategory.includes(item)
+                  )}
+                  onChange={(e) => {
+                    setSelectedCategory(e)
+                  }}
+                  className="basic-multi-select w-[400px] z-10"
+                  classNamePrefix="select"
+                  onBlur={() => setOpenSelect(false)}
+                  onFocus={() => setOpenSelect(true)}
+                  menuIsOpen={openSelect}
+                />
+              </div>
+
+              <button
+                onClick={() => {
+                  handleFunc_IDs()
                 }}
-                className="basic-multi-select w-[400px] z-10"
-                classNamePrefix="select"
-                onBlur={() => setOpenSelect(false)}
-                onFocus={() => setOpenSelect(true)}
-                menuIsOpen={openSelect}
-              />
-            </div>
-          )}
-          {selectedCategory.length !== 0 && (
-            <button
-              onClick={() => {
-                handleFunc_IDs()
-              }}
-              className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
-            >
-              Next
-            </button>
+                className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+              >
+                Next
+              </button>
+            </>
           )}
         </div>
-        {outputVariables && (
+
+        {outputVariables && tableResult.length < 1 && (
           <>
             <div className="mt-5 w-full">
               <Table
@@ -226,12 +235,20 @@ export default function Home() {
               />
             </div>
             <button
-              // className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+              className="linear rounded-[20px] mt-10 bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
               onClick={handleScripts}
             >
               Submit
             </button>
           </>
+        )}
+        {tableResult && (
+          <HotTable
+            data={tableResult}
+            colHeaders={keys(tableResult[0])}
+            width="100%"
+            licenseKey="non-commercial-and-evaluation"
+          />
         )}
       </div>
     </div>
