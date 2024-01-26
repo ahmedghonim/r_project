@@ -6,7 +6,7 @@ import "handsontable/dist/handsontable.full.css"
 // register Handsontable's modules
 registerAllModules()
 
-const Table = ({ setGetDataTable, selectedCategory }) => {
+const Table = ({ setGetDataTable, selectedCategory, selectTypes }) => {
   const hotRef = useRef(null)
 
   return (
@@ -15,7 +15,9 @@ const Table = ({ setGetDataTable, selectedCategory }) => {
         colHeaders={selectedCategory.map((item) => item.label)}
         ref={hotRef}
         startRows={1}
-        columns={selectedCategory.map((item) => item.label)}
+        columns={selectedCategory.map((item, index) => ({
+          [item.value]: selectTypes[index],
+        }))}
         width="100%"
         startCols={selectedCategory.map((item) => item.label).length}
         autoWrapCol={true}

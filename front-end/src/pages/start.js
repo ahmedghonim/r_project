@@ -16,6 +16,7 @@ export default function Home() {
     current_prepost: "0",
   })
   const [selectedCategory, setSelectedCategory] = useState([])
+  const [selectTypes, setSelectTypes] = useState([])
   const [inputParams, setInputParams] = useState(null)
   const [funcIdsValues, setFuncIdsValues] = useState(null)
   const [outputVariables, setOutputVariables] = useState(null)
@@ -54,6 +55,7 @@ export default function Home() {
       setInputParams(data[1])
 
       setCategory(categoryValue)
+      setSelectTypes(data[2])
     } catch (e) {
       console.log(e)
     }
@@ -69,6 +71,7 @@ export default function Home() {
         input_params: JSON.stringify(inputParams),
       })
       setFuncIdsValues(data)
+
       const { data: outputVariables } = await mutateHandleOutputVariables({
         funcIDs: JSON.stringify(data[1]),
       })
@@ -153,6 +156,7 @@ export default function Home() {
               </button>
             </div>
           )}
+
           {category.length !== 0 && (
             <div>
               <label
@@ -196,6 +200,7 @@ export default function Home() {
           <Table
             selectedCategory={selectedCategory}
             setGetDataTable={setGetDataTable}
+            selectTypes={selectTypes}
           />
         </div>
         <button
