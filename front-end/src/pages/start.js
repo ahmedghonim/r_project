@@ -9,15 +9,14 @@ import ReactSelect from "react-select"
 import Header from "@/components/Header"
 import ScrollUp from "@/components/Common/ScrollUp"
 import { zipObject } from "lodash"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
   const [firstInput, setFirstInput] = useState({
     current_prepost: "0",
   })
-  const [openSelect, setOpenSelect] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState([])
-  const [selectTypes, setSelectTypes] = useState([])
   const [inputParams, setInputParams] = useState(null)
   const [funcIdsValues, setFuncIdsValues] = useState(null)
   const [outputVariables, setOutputVariables] = useState(null)
@@ -56,7 +55,6 @@ export default function Home() {
       setInputParams(data[1])
 
       setCategory(categoryValue)
-      setSelectTypes(data[2])
     } catch (e) {
       console.log(e)
     }
@@ -72,7 +70,6 @@ export default function Home() {
         input_params: JSON.stringify(inputParams),
       })
       setFuncIdsValues(data)
-
       const { data: outputVariables } = await mutateHandleOutputVariables({
         funcIDs: JSON.stringify(data[1]),
       })
@@ -85,8 +82,8 @@ export default function Home() {
   async function handleScripts() {
     const values = selectedCategory.map((item) => item.value)
     const df = getDataTable.map((row) => {
-      const newRow = row.map((item) => item || "NA")
-
+      let newRow = row.map((item) => item || "NA")
+      newRow=newRow.map(item=>typeof item === "number"? parseFloat(item): item );
       return zipObject(values, newRow)
     })
 
@@ -157,7 +154,6 @@ export default function Home() {
               </button>
             </div>
           )}
-
           {category.length !== 0 && (
             <div>
               <label
@@ -180,9 +176,6 @@ export default function Home() {
                 }}
                 className="basic-multi-select w-[400px] z-10"
                 classNamePrefix="select"
-                onBlur={() => setOpenSelect(false)}
-                onFocus={() => setOpenSelect(true)}
-                menuIsOpen={openSelect}
               />
             </div>
           )}
@@ -204,7 +197,6 @@ export default function Home() {
           <Table
             selectedCategory={selectedCategory}
             setGetDataTable={setGetDataTable}
-            selectTypes={selectTypes}
           />
         </div>
         <button
