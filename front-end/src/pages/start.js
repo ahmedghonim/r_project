@@ -101,9 +101,6 @@ export default function Home() {
         current_outputs: JSON.stringify(outputVariables),
         current_prepost: firstInput.current_prepost,
       })
-      // const columns = keys(data[0])
-      // const rows = data.map((row) => Object.values(row))
-
       setTableResult(data)
     } catch (e) {
       console.log(e)
@@ -114,7 +111,7 @@ export default function Home() {
       <Header className={"bg-gray-dark"} />
       <ScrollUp />
 
-      <div className="px-20 relative z-10 pt-28">
+      <div className="px-20 relative z-10 pt-28 w-full">
         <button
           onClick={() => {
             setFirstInput({
@@ -133,139 +130,140 @@ export default function Home() {
         >
           Reset
         </button>
-        <div className="flex items-end gap-7">
-          {category.length < 1 && (
-            <>
-              <div className="flex items-center gap-3">
-                <Switch
-                  color="blue"
-                  id="current_prepost"
-                  name="current_prepost"
-                  onChange={(e) => {
-                    console.log(e.target.checked)
+        <div className=" w-[95%] flex justify-center flex-col items-center">
+          <div className="flex items-end gap-7">
+            {category.length < 1 && (
+              <>
+                <div className="flex items-center gap-3">
+                  <Switch
+                    color="blue"
+                    id="current_prepost"
+                    name="current_prepost"
+                    onChange={(e) => {
+                      console.log(e.target.checked)
 
-                    setFirstInput({
-                      ...firstInput,
-                      current_prepost: e.target.checked ? "1" : "0",
-                    })
-                  }}
-                />
-                <label
-                  for="current_prepost"
-                  className="cursor-pointer text-base font-medium text-white"
-                >
-                  Current Prepost
-                </label>
-              </div>
-              <div className="w-[150px]">
-                <InputField
-                  label="Current Groups"
-                  name="current_groups"
-                  max={10}
-                  min={0}
-                  value={+firstInput.current_groups}
-                  type="number"
-                  onChange={(e) => {
-                    setFirstInput({
-                      ...firstInput,
-                      current_groups: e.target.value.toString(),
-                    })
-                  }}
-                />
-              </div>
-              <div className="w-[150px]">
-                <InputField
-                  label="Category"
-                  name="numeric_input"
-                  max={10}
-                  min={0}
-                  value={+firstInput.numeric_input}
-                  type="number"
-                  onChange={(e) => {
-                    setFirstInput({
-                      ...firstInput,
-                      numeric_input: e.target.value.toString(),
-                    })
-                  }}
-                />
-              </div>
+                      setFirstInput({
+                        ...firstInput,
+                        current_prepost: e.target.checked ? "1" : "0",
+                      })
+                    }}
+                  />
+                  <label
+                    for="current_prepost"
+                    className="cursor-pointer text-base font-medium text-white"
+                  >
+                    Current Prepost
+                  </label>
+                </div>
+                <div className="w-[150px]">
+                  <InputField
+                    label="Current Groups"
+                    name="current_groups"
+                    max={10}
+                    min={0}
+                    value={+firstInput.current_groups}
+                    type="number"
+                    onChange={(e) => {
+                      setFirstInput({
+                        ...firstInput,
+                        current_groups: e.target.value.toString(),
+                      })
+                    }}
+                  />
+                </div>
+                <div className="w-[150px]">
+                  <InputField
+                    label="Category"
+                    name="numeric_input"
+                    max={10}
+                    min={0}
+                    value={+firstInput.numeric_input}
+                    type="number"
+                    onChange={(e) => {
+                      setFirstInput({
+                        ...firstInput,
+                        numeric_input: e.target.value.toString(),
+                      })
+                    }}
+                  />
+                </div>
 
-              <div>
+                <div>
+                  <button
+                    onClick={handleFirstInput}
+                    className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
+            {category.length !== 0 && !outputVariables && (
+              <>
+                <div>
+                  <label
+                    htmlFor={"colors"}
+                    className={`text-sm text-navy-700 text-white `}
+                  >
+                    Category
+                  </label>
+
+                  <ReactSelect
+                    isMulti
+                    name="colors"
+                    value={selectedCategory}
+                    // filter if add in selectedCategory
+                    options={category.filter(
+                      (item) => !selectedCategory.includes(item)
+                    )}
+                    onChange={(e) => {
+                      setSelectedCategory(e)
+                    }}
+                    className="basic-multi-select w-[400px] z-10"
+                    classNamePrefix="select"
+                    onBlur={() => setOpenSelect(false)}
+                    onFocus={() => setOpenSelect(true)}
+                    menuIsOpen={openSelect}
+                  />
+                </div>
+
                 <button
-                  onClick={handleFirstInput}
+                  onClick={() => {
+                    handleFunc_IDs()
+                  }}
                   className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
                 >
                   Next
                 </button>
-              </div>
-            </>
-          )}
-          {category.length !== 0 && !outputVariables && (
+              </>
+            )}
+          </div>
+          {outputVariables && tableResult.length < 1 && (
             <>
-              <div>
-                <label
-                  htmlFor={"colors"}
-                  className={`text-sm text-navy-700 text-white `}
-                >
-                  Category
-                </label>
-
-                <ReactSelect
-                  isMulti
-                  name="colors"
-                  value={selectedCategory}
-                  // filter if add in selectedCategory
-                  options={category.filter(
-                    (item) => !selectedCategory.includes(item)
-                  )}
-                  onChange={(e) => {
-                    setSelectedCategory(e)
-                  }}
-                  className="basic-multi-select w-[400px] z-10"
-                  classNamePrefix="select"
-                  onBlur={() => setOpenSelect(false)}
-                  onFocus={() => setOpenSelect(true)}
-                  menuIsOpen={openSelect}
+              <div className="mt-5 w-full">
+                <Table
+                  selectedCategory={selectedCategory}
+                  setGetDataTable={setGetDataTable}
+                  selectTypes={selectTypes}
                 />
               </div>
-
               <button
-                onClick={() => {
-                  handleFunc_IDs()
-                }}
-                className="linear rounded-[20px] bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+                className="linear rounded-[20px] mt-10 bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+                onClick={handleScripts}
               >
-                Next
+                Submit
               </button>
             </>
           )}
+          {tableResult && (
+            <HotTable
+              data={tableResult}
+              colHeaders={keys(tableResult[0])}
+              width="100%"
+              licenseKey="non-commercial-and-evaluation"
+            />
+          )}
         </div>
-
-        {outputVariables && tableResult.length < 1 && (
-          <>
-            <div className="mt-5 w-full">
-              <Table
-                selectedCategory={selectedCategory}
-                setGetDataTable={setGetDataTable}
-                selectTypes={selectTypes}
-              />
-            </div>
-            <button
-              className="linear rounded-[20px] mt-10 bg-blue-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
-              onClick={handleScripts}
-            >
-              Submit
-            </button>
-          </>
-        )}
-        {tableResult && (
-          <HotTable
-            data={tableResult}
-            colHeaders={keys(tableResult[0])}
-            width="100%"
-            licenseKey="non-commercial-and-evaluation"
-          />
-        )}
       </div>
     </div>
   )
