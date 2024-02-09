@@ -1,49 +1,49 @@
-"use client"
-import Image from "next/image"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
-import ThemeToggler from "./ThemeToggler"
-import menuData from "./menuData"
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import ThemeToggler from "./ThemeToggler";
+import menuData from "./menuData";
 
 const Header = ({ className }) => {
   // Navbar toggle
-  const [navbarOpen, setNavbarOpen] = useState(false)
+  const [navbarOpen, setNavbarOpen] = useState(false);
   const navbarToggleHandler = () => {
-    setNavbarOpen(!navbarOpen)
-  }
+    setNavbarOpen(!navbarOpen);
+  };
 
   // Sticky Navbar
-  const [sticky, setSticky] = useState(false)
+  const [sticky, setSticky] = useState(false);
   const handleStickyNavbar = () => {
     if (window.scrollY >= 80) {
-      setSticky(true)
+      setSticky(true);
     } else {
-      setSticky(false)
+      setSticky(false);
     }
-  }
+  };
   useEffect(() => {
-    window.addEventListener("scroll", handleStickyNavbar)
-  })
+    window.addEventListener("scroll", handleStickyNavbar);
+  });
 
   // submenu handler
-  const [openIndex, setOpenIndex] = useState(-1)
+  const [openIndex, setOpenIndex] = useState(-1);
   const handleSubmenu = (index) => {
     if (openIndex === index) {
-      setOpenIndex(-1)
+      setOpenIndex(-1);
     } else {
-      setOpenIndex(index)
+      setOpenIndex(index);
     }
-  }
+  };
 
-  const usePathName = usePathname()
+  const usePathName = usePathname();
 
   return (
     <>
       <header
         className={`header left-[2.5%] top-5 z-40 flex w-[95%]  items-center ${className} ${
           sticky
-            ? "dark:bg-gray-dark dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition rounded-xl"
+            ? "dark:bg-[#acb6c4] dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition rounded-xl"
             : "absolute bg-transparent"
         }`}
       >
@@ -100,10 +100,10 @@ const Header = ({ className }) => {
                       {menuItem.path ? (
                         <Link
                           href={menuItem.path}
-                          className={`flex py-2 text-base lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 ${
+                          className={`flex py-2 text-base font-bold lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 ${
                             usePathName === menuItem.path
-                              ? "text-primary dark:text-white"
-                              : "text-dark hover:text-primary dark:text-white/70 dark:hover:text-white"
+                              ? "text-primary dark:text-black"
+                              : "text-dark hover:text-primary dark:text-black/70 dark:hover:text-black"
                           }`}
                         >
                           {menuItem.title}
@@ -152,7 +152,7 @@ const Header = ({ className }) => {
         </div>
       </header>
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
