@@ -67,7 +67,6 @@ export default function Home() {
 
       <Conversions />
       <Brands />
-      <AboutSectionTwo />
       <Testimonials />
       <Contact />
       <ScrollToTop />

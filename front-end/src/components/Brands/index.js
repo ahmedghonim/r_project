@@ -3,7 +3,7 @@ import brandsData from "./brandsData";
 
 const Brands = () => {
   return (
-    <section className="pt-16">
+    <section className="py-16">
       <div className="container">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
@@ -15,7 +15,9 @@ const Brands = () => {
                 <div className="px-6">
                   <Image
                     alt="..."
-                    // src="https://www.creative-tim.com/learning-lab/tailwind-starter-kit/img/team-1-800x800.jpg"
+                    src="/logo.jpg"
+                    width={120}
+                    height={120}
                     className="shadow-lg rounded-full max-w-full mx-auto max-w=[120px]"
                   />
                   <div className="pt-6 text-center">
