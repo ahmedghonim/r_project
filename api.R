@@ -4,7 +4,10 @@ library(uxstats)
 library(jsonlite)
 library(DBI)
 library(readxl)
-
+library(openxlsx)
+library(meta)
+library(utilities)
+options("plumber.port" = 8000)
 #* @apiTitle Statistical Analysis
 #* @apiDescription This is a sample server for a Meta-analysis.
 #* @apiTOS http://example.com/terms/
@@ -24,13 +27,25 @@ function(req){
   plumber::forward()
 }
 
-#* get the status of the api
-#* @get /api/health-check
-status <- function(){
-  list(
-    status = "API Is Runing "
-  )
+
+
+#* Return available categories
+#' @return JSON object of available categories and their IDs
+#' @serializer json
+#* @get /api/available_categories
+function(){
+  return(categories%>%select(ID, Name))
 }
+
+
+#* Return available lab conversions
+#' @return JSON object of available lab conversions and their IDs
+#' @serializer json
+#* @get /api/labs
+function(){
+ return(Labs%>%select(ID, Conversion))
+}
+
 
 
 
@@ -70,25 +85,55 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
   return (rbind(inputs,final_names$ui[inds]))
   
 }
-
-
-
-
 #' check eligible functions for given groups and prepost
-#' @post /api/eligible_functions
+#' @post /api/Rename_variables
+#' @param var_names column names to be renamed
 #' @param current_groups The number of current groups
 #' @param current_prepost Whether there's prepost data
-#' @return JSON object containing Available Input parameters for all eligible functions
+#' @return JSON object containing old & new names
 #' @serializer json list(na="string")
-function(current_groups, current_prepost){
-  pp<-fromJSON(current_prepost)
-  n=fromJSON(current_groups)
-  browser()
+function(var_names, current_groups, current_prepost){
+  
+  
+  inputs<-fromJSON(var_names)
+
+  
+  pp<-current_prepost
+  n=current_groups
+  
   g1=ifelse(n==1,1,0)
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
   
-  eligible_functions<-mandatory%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3) %>% select(`ID`,`Function`)
+  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) )
+  
+  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3)
+  
+  final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
+  
+  inds<-match(inputs,final_names$internal)
+  return (final_names$ui[inds])
+  
+}
+
+
+#' check eligible functions for given groups and prepost
+#' @post /api/eligible_functions
+#' @param category category of operations
+#' @param current_groups The number of current groups
+#' @param current_prepost Whether there's prepost data
+#' @return JSON object containing Available Input parameters for all eligible functions
+#' @serializer json list(na="string")
+function(current_groups, current_prepost, category){
+  pp<-fromJSON(current_prepost)
+  n=fromJSON(current_groups)
+  c<-fromJSON((category))
+  
+  g1=ifelse(n==1,1,0)
+  g2=ifelse(n==2,1,0)
+  g3=ifelse(n>2,1,0)
+  
+  eligible_functions<-mandatory%>%filter(`group_1` == g1, `group_2` == g2, `group_3.`== g3, category == c) %>% select(`ID`,`Function`)
   
   inds=match(eligible_functions$`Function`,available$`Function`)
   
@@ -121,15 +166,13 @@ function(input_params, user_inputs){
   funcs<-fromJSON(input_params)
   outs<-fromJSON(user_inputs)
   output<- output_df
-  
-  available_funcs<-mandatory[funcs,]%>% select(1,7:ncol(mandatory))
+  available_funcs<-mandatory[funcs,]%>% select(1,8:ncol(mandatory))
   available_funcs<- available_funcs %>%  rowwise() %>% 
     mutate(original=sum( c_across(2: ncol(available_funcs) ) ), current=0 )
   cols<- match(outs, colnames(available_funcs))
   
   for (i in 1:nrow(available_funcs)) {
     row<-available_funcs[i,]
-    
     available_funcs$current[i]=sum(as.numeric(row[cols]) & rep(1, length(outs)))
     
   }
@@ -169,6 +212,10 @@ function(funcIDs){
 }   
 
 
+
+
+
+
 cors <- function(req, res) {
   
   res$setHeader("Access-Control-Allow-Origin", "*")
@@ -192,7 +239,7 @@ function(pr) {
  
     
   pr %>% pr_hook("preroute",cors) %>% 
-    pr_mount("/api/scripts", plumb("./routes/base_scripts.R"))
+    pr_mount("/api/scripts", plumb("./routes/base_scripts.R")) 
 }
 
 

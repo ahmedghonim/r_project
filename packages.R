@@ -35,5 +35,11 @@ if(!require("RSQLite")){
   install.packages("RSQLite")
   library(RSQLite)
 }
+if(!require("openxlsx")){
+  install.packages("openxlsx")
+  library(openxlsx)
+}
+
+
 
 
