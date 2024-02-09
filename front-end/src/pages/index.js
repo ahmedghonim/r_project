@@ -75,7 +75,7 @@ export default function Home() {
 }
 function Banner({ src, title, subTitle }) {
   return (
-    <div className="relative h-[125px] w-full sm:h-full">
+    <div className="relative h-[125px] w-full sm:h-[75vh]">
       <Image
         height={577}
         width={2000}
@@ -88,7 +88,7 @@ function Banner({ src, title, subTitle }) {
         <ul>
           {subTitle.map((item, index) => (
             <li
-              className="text-lg font-light leading-relaxed mt-0 mb-4 text-blueGray-600"
+              className="text-lg leading-relaxed mt-0 mb-4 text-blueGray-600 list-disc"
               key={index}
             >
               {item}

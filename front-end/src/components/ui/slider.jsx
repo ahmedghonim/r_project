@@ -61,9 +61,12 @@ export function Slider({
 
       <Swiper
         ref={sliderRef}
-        // centeredSlides={true}
         centeredSlidesBounds={true}
         spaceBetween={16}
+        autoplay={{
+          delay: 1000,
+          disableOnInteraction: true,
+        }}
         breakpoints={breakpoints}
         slidesPerView={slidesPerView}
         pagination={{

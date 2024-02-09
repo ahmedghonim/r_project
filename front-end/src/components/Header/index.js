@@ -48,18 +48,19 @@ const Header = ({ className }) => {
         }`}
       >
         <div className="relative mx-4 flex items-center justify-between w-full">
-          <div className="w-60 max-w-full px-4 xl:mr-12">
+          <div className="w-60 max-w-full px-4 xl:mr-12 ">
             <Link
               href="/"
-              className={`block w-fit h-fit rounded-lg overflow-hidden my-4`}
+              className={` rounded-lg overflow-hidden my-4 flex items-center justify-center gap-2 text-xl font-bold text-dark hover:text-primary dark:hover:text-primary transition-all duration-300`}
             >
               <Image
                 src="/logo.jpg"
                 alt="logo"
                 width={140}
                 height={30}
-                className="w-[50px]"
+                className="w-[50px] rounded-md"
               />
+              <span>TreatMeta</span>
             </Link>
           </div>
           <div className="flex w-full items-center justify-center px-10">
