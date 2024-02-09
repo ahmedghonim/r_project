@@ -42,7 +42,7 @@ module.exports = {
         "gray-light": "#F0F2F9",
         stroke: "#E3E8EF",
         "stroke-dark": "#353943",
-        "bg-color-dark": "#171C28",
+        "bg-color-dark": "#e2e8f0",
       },
 
       boxShadow: {
@@ -65,4 +65,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

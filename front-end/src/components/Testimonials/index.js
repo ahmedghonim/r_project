@@ -1,5 +1,5 @@
-import SectionTitle from "../Common/SectionTitle"
-import SingleTestimonial from "./SingleTestimonial"
+import SectionTitle from "../Common/SectionTitle";
+import SingleTestimonial from "./SingleTestimonial";
 
 const testimonialData = [
   {
@@ -29,11 +29,11 @@ const testimonialData = [
     image: "/images/testimonials/auth-03.png",
     star: 5,
   },
-]
+];
 
 const Testimonials = () => {
   return (
-    <section className="dark:bg-bg-color-dark bg-gray-light relative z-10 py-16 md:py-20 lg:py-28">
+    <section className="dark:bg-bg-color-dark bg-gray-light relative z-10 py-16">
       <div className="container">
         <SectionTitle
           title="What Our Users Says"
@@ -176,7 +176,7 @@ const Testimonials = () => {
         </svg>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Testimonials
+export default Testimonials;
