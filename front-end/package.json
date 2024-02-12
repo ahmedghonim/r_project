@@ -15,6 +15,7 @@
     "@handsontable/react": "^14.1.0",
     "axios": "^1.6.5",
     "handsontable": "^14.1.0",
+    "lodash": "^4.17.21",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",

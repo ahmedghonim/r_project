@@ -1,6 +1,6 @@
 import SectionTitle from "../Common/SectionTitle";
-import SingleBlog from "./SingleBlog";
-import blogData from "./blogData";
+import SingleConversion from "./SingleBlog";
+import conversionsList from "./blogData";
 
 const Conversions = () => {
   return (
@@ -8,14 +8,14 @@ const Conversions = () => {
       <div className="container">
         <SectionTitle
           title="Our Conversions"
-          paragraph="Our Conversions desc"
+          paragraph="Categories and list of conversions: "
           center
         />
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 md:gap-x-6 lg:gap-x-8 xl:grid-cols-3">
-          {blogData.map((blog) => (
-            <div key={blog.id} className="w-full">
-              <SingleBlog blog={blog} />
+        <div className="flex flex-wrap justify-center gap-9">
+          {conversionsList.map((blog) => (
+            <div key={blog.id} className="w-[30%]">
+              <SingleConversion blog={blog} />
             </div>
           ))}
         </div>

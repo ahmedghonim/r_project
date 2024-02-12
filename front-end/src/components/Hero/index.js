@@ -4,22 +4,52 @@ const Hero = () => {
   return (
     <div>
       <section id="home" className="relative z-10 overflow-hidden ">
-        <div className="relative pt-16 pb-32 flex content-center items-center justify-center h-[75vh] bg-[#e2e8f0]">
-          <div className="absolute top-0 w-full h-full bg-center bg-cover"></div>
+        <div className="relative h-[75vh] flex justify-center items-center">
+          <div
+            className="absolute z-1 top-0 left-0 w-full pt-16 pb-32 flex content-center items-center justify-center h-[75vh] bg-[url('/why_tm.jpg')] bg-cover bg-center"
+            style={{
+              backgroundRepeat: "no-repeat",
+              filter: "brightness(0.4)",
+            }}
+          ></div>
+
           <div className="container relative mx-auto">
             <div className="items-center flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+              <div className="px-4 ml-auto mr-auto text-center">
                 <div className="pr-12">
-                  <h1 className="text-white font-semibold text-5xl">
-                    Your story starts with us.
+                  <h1 className="text-white font-semibold  text-5xl">
+                    Why TreatMeta
                   </h1>
-                  <p className="mt-4 text-lg text-blueGray-200">
-                    This is a simple example of a Landing Page you can build
-                    using Tailwind Starter Kit. It features multiple CSS
-                    components based on the Tailwindcss design system.
+                  <p className="mt-4 text-lg text-white font-semibold">
+                    We developed the "TreatMeta" website to streamline further
+                    and broaden accessibility for using many forms of data
+                    unsuitable for meta-analysis, making them suitable. It
+                    condenses many steps and conversations into just one click,
+                    allowing conversion of all study outcome values
+                    simultaneously, not just conversion by conversion nor
+                    study-by-study.
+                  </p>
+                  <p className="mt-4 text-lg text-white font-semibold">
+                    You will get your data converted and ready for any
+                    meta-analysis software; just copy and paste!{" "}
+                  </p>
+                  <p className="mt-4 text-lg text-white font-semibold">
+                    Moreover, our website will allow conducting advanced
+                    analytical techniques like indirect meta-analysis,
+                    prevalence meta-analysis, and much more!
+                  </p>
+                  <p className="mt-4 text-lg text-white font-semibold">
+                    Look forward to exciting developments in the coming months!
                   </p>
                 </div>
               </div>
+              <Link
+                href="/start"
+                className="mt-5 mx-auto text-center shadow-submit dark:shadow-submit-dark rounded-sm bg-[#f87178] px-9 py-4 text-base font-medium text-white duration-300 hover:bg-[#f87178]/90"
+              >
+                Start Conversions <br />
+                [Treat your data here ]
+              </Link>
             </div>
           </div>
           <div
@@ -36,7 +66,7 @@ const Hero = () => {
               y="0"
             >
               <polygon
-                className="text-blueGray-200 fill-current"
+                className="text-white font-semibold fill-current"
                 points="2560 0 2560 100 0 100"
               ></polygon>
             </svg>

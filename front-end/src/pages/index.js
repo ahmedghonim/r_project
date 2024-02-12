@@ -12,6 +12,7 @@ import Contact from "@/components/Contact";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Slider } from "@/components/ui/slider";
+import SectionTitle from "@/components/Common/SectionTitle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function Home() {
       <Header />
       <ScrollUp />
       <Hero />
+      <SectionTitle title="The Story Behind Us " center />
       <Slider
         slidesPerView={1}
         breakpoints={{
@@ -28,37 +30,40 @@ export default function Home() {
         }}
         data={[
           {
-            src: "/logo.jpg",
-            title:
-              'Initially, we relied on various websites and manual conversion tools like the Cochrane sheet. Ourgoal was to centralize conversions, streamlining data handling and saving time. This led to thedevelopment of an "Excel conversion sheet," collecting crucial conversions for meta-analysis data prep. Itincluded',
+            src: "/1-1.jpg",
             subTitle: [
-              "M&SE to M&SD",
-              "M&CI to M&SD",
-              "M&IQR to M&SD",
-              "M & range",
-              "Correlation coefficient calculation",
-              "M & SD change calculation per group",
-              "P value to SD (between groups)",
-              "Cl to SD (between groups)",
+              "Initially, we relied on manual conversions by memorizing the equations and, in some cases, using the previous Cochrane sheet. Our goal was to centralize conversions, streamline data handling, and save time.  ",
             ],
           },
           {
-            src: "/logo.jpg",
-            title:
-              'While this sheet improved data prep, like other tools, it converted values individually: \n Intervention & control groups, pre- & post-intervention, then calculating M & SD change. We needed a tool offering several conversions combined with simultaneous conversion of an outcome data per study in a single step. This sparked the development of the "IMedRA-ACR conversion tool," condensing 5-10steps into one. It featured:',
+            src: "/2.jpg",
             subTitle: [
-              "Single-step conversion of all data types to M & SD for any outcome per study (intervention/control, pre/post, M & SD change calculation)",
-              "Calculation of M & SD from data per 1 patient",
-              "Data combination of 2+ groups",
-              "Measurement unit conversion (e.g., mg to gm)",
+              'This led to the development of an "Excel conversion sheet," collecting crucial conversions for meta-analysis data preparation. ',
+              "It included the following conversions: ",
+              "Mean and standard error (SE), mean and confidence interval (CI), median and inter-quartile range (IQR), and median and range to [mean and standard deviation (SD)]. Also, correlation coefficient calculation and mean and standard deviation (SD) change calculation from mean and SD pre- and post-treatment were available. Finally, it contained the conversion of P value or CI of difference between groups to SD for both groups. ",
             ],
           },
           {
-            src: "/logo.jpg",
-            title:
-              'The "IMedRA-ACR conversion tool" significantly improved data prep.',
+            src: "/1.jpg",
+
             subTitle: [
-              'However, using the previous method, we still need to convert one outcome per one study and was Windows-only. To further streamline and broaden accessibility, we developed the "TreatMeta" website. It condenses over 100 steps into one, allowing conversion of all study outcome values simultaneously, not just study-by-study. Moreover, our website will allow conducting advanced analytical techniques like indirect meta-analysis, Prevalence meta-analysis, and much more!',
+              "Although this sheet improved data preparation a lot, it converted data individually: Intervention & control groups, pre- & post-intervention, and then calculating mean and SD change (that will be used in the meta-analysis), which required a lot of time and effort and, may lead to some errors.  ",
+            ],
+          },
+          {
+            src: "/3.jpg",
+
+            subTitle: [
+              'We needed a tool offering several conversions combined with simultaneous conversion of outcome data per study in a single step. This sparked the development of the "ACR conversion software," condensing 5-10 steps into one as a single-step conversion of many data types to mean and SD for any outcome per study. Also, we added some other conversations as the combination of mean and SD for two or more groups',
+
+              "Although ACR software significantly improved the data preparation step, it still converted one outcome study at a time, and it was for Windows only. ",
+            ],
+          },
+          {
+            src: "/4.jpg",
+
+            subTitle: [
+              'Therefore, we solved all of the previous problems and added other conversions and advanced meta-analysis techniques by developing our new tool, "TreatMeta',
             ],
           },
         ]}
@@ -75,7 +80,7 @@ export default function Home() {
 }
 function Banner({ src, title, subTitle }) {
   return (
-    <div className="relative h-[125px] w-full sm:h-[75vh]">
+    <div className="relative  bg-[#e2e8f0] w-full h-[60vh] grid grid-cols-2 justify-center gap-7 items-center">
       <Image
         height={577}
         width={2000}
@@ -83,19 +88,17 @@ function Banner({ src, title, subTitle }) {
         src={src || Mawjood}
         alt={title}
       />
-      <div className="absolute inset-[0] flex w-fit flex-col  items-start justify-center gap-3 capitalize ltr:ms-[12%] rtl:ms-[50%] sm:-top-24 sm:ms-[20%] sm:gap-7">
-        <h1 className="text-2xl mb-2 font-semibold leading-normal">{title}</h1>
-        <ul>
-          {subTitle.map((item, index) => (
-            <li
-              className="text-lg leading-relaxed mt-0 mb-4 text-blueGray-600 list-disc"
-              key={index}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
+
+      <ul className="pr-24">
+        {subTitle.map((item, index) => (
+          <li
+            className="text-lg leading-relaxed mt-0 mb-4 text-blueGray-600 "
+            key={index}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

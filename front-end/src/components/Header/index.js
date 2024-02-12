@@ -43,15 +43,15 @@ const Header = ({ className }) => {
       <header
         className={`header left-[2.5%] top-5 z-40 flex w-[95%]  items-center ${className} ${
           sticky
-            ? "dark:bg-[#acb6c4] dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition rounded-xl"
+            ? "dark:bg-[#1c2430] dark:shadow-sticky-dark fixed z-[9999] bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm transition rounded-xl"
             : "absolute bg-transparent"
         }`}
       >
-        <div className="relative mx-4 flex items-center justify-between w-full">
-          <div className="w-60 max-w-full px-4 xl:mr-12 ">
+        <div className="relative flex items-center p-3 justify-between w-full">
+          <div className=" max-w-full">
             <Link
               href="/"
-              className={` rounded-lg overflow-hidden my-4 flex items-center justify-center gap-2 text-xl font-bold text-dark hover:text-primary dark:hover:text-primary transition-all duration-300`}
+              className={` rounded-lg overflow-hidden flex items-center justify-center gap-2 text-xl font-bold text-white hover:text-primary dark:hover:text-primary transition-all duration-300`}
             >
               <Image
                 src="/logo.jpg"
@@ -62,6 +62,9 @@ const Header = ({ className }) => {
               />
               <span>TreatMeta</span>
             </Link>
+            <span className="text-[12px] font-bold text-white text-nowrap">
+              " Where Data Gets the Treat It Deserves "
+            </span>
           </div>
           <div className="flex w-full items-center justify-center px-10">
             <div>
@@ -103,8 +106,8 @@ const Header = ({ className }) => {
                           href={menuItem.path}
                           className={`flex py-2 text-base font-bold lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 ${
                             usePathName === menuItem.path
-                              ? "text-primary dark:text-black"
-                              : "text-dark hover:text-primary dark:text-black/70 dark:hover:text-black"
+                              ? "text-white"
+                              : "text-white hover:text-primary dark:text-white/70 dark:hover:text-white"
                           }`}
                         >
                           {menuItem.title}
@@ -113,7 +116,7 @@ const Header = ({ className }) => {
                         <>
                           <p
                             onClick={() => handleSubmenu(index)}
-                            className="flex cursor-pointer items-center justify-between py-2 text-base text-dark group-hover:text-primary dark:text-white/70 dark:group-hover:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6"
+                            className="flex cursor-pointer items-center justify-between py-2 text-base text-white group-hover:text-primary dark:text-white/70 dark:group-hover:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6"
                           >
                             {menuItem.title}
                             <span className="pl-3">
@@ -136,7 +139,7 @@ const Header = ({ className }) => {
                               <Link
                                 href={submenuItem.path}
                                 key={index}
-                                className="block rounded py-2.5 text-sm text-dark hover:text-primary dark:text-white/70 dark:hover:text-white lg:px-3"
+                                className="block rounded py-2.5 text-sm text-white hover:text-primary dark:text-white/70 dark:hover:text-white lg:px-3"
                               >
                                 {submenuItem.title}
                               </Link>

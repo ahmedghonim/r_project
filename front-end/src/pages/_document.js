@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from "next/document"
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
@@ -15,7 +15,7 @@ export default function Document() {
             content="Web site created using create-react-app"
           />
           <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-          <title>Horizon UI - Tailwind React</title>
+          <title>TreatMeta</title>
         </head>
       </Head>
       <body>
@@ -23,5 +23,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  )
+  );
 }

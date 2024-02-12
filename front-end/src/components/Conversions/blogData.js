@@ -1,45 +1,48 @@
-const blogData = [
+const conversionsList = [
   {
     id: 1,
-    title: "Best UI components for modern websites",
-    paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-    image: "/logo.jpg",
-    author: {
-      name: "Samuyl Joshi",
-      image: "/images/blog/author-01.png",
-      designation: "Graphic Designer",
-    },
-    tags: ["creative"],
-    publishDate: "2025",
+    title: "Mean and standard deviation (SD) conversions",
+    paragraph: [
+      "Mean and confidence interval (CI) ",
+      "Mean and standard error (SE) ",
+      "Median and range ",
+      "Median and inter quartile range (IQR) ",
+      "P value of difference between groups ",
+      ,
+      "Confidence interval (CI) of difference between groups  ",
+    ],
+    image: "/histogram.png",
   },
   {
-    id: 2,
-    title: "9 simple ways to improve your design skills",
-    paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-    image: "/logo.jpg",
-    author: {
-      name: "Musharof Chy",
-      image: "/images/blog/author-02.png",
-      designation: "Content Writer",
-    },
-    tags: ["computer"],
-    publishDate: "2025",
+    id: 1,
+    title: "Effect size estimation",
+    paragraph: [
+      "Indirect meta-analysis",
+      "Prevalence (proportions) meta-analysis  ",
+      "Dichotomous data pooling  ",
+      "Continuous data pooling  ",
+    ],
+    image: "/Indirect.jpg",
   },
   {
-    id: 3,
-    title: "Tips to quickly improve your coding speed.",
-    paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-    image: "/logo.jpg",
-    author: {
-      name: "Lethium Deo",
-      image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
-    },
-    tags: ["design"],
-    publishDate: "2025",
+    id: 1,
+    title: " Mean and SD calculation",
+    paragraph: ["From data for each patient into mean and SD "],
+    image: "/people.png",
+  },
+  {
+    id: 1,
+    title: "Mean and  SD combination ",
+    paragraph: ["From two or more groups into single mean and SD "],
+    image: "/probability.png",
+  },
+  {
+    id: 1,
+    title: "Units and labs conversions ",
+    paragraph: [
+      "More than 150 lab and units conversions such as hormones, blood sugar, length, weight, and many others.",
+    ],
+    image: "/sales-funnel_1.png",
   },
 ];
-export default blogData;
+export default conversionsList;
