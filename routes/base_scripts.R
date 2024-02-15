@@ -68,7 +68,7 @@ prepare_prepost<-function(df){
   pre_group<-df%>% filter(change_group==0) %>% rename(preMean=Mean, preSD=SD)
   post_group<-df%>% filter(change_group==1) %>% rename(postMean=Mean, postSD=SD)
   percent_group<-df%>% filter(change_group==2) %>% rename(preMean=Mean, preSD=SD) %>%
-                                                            mutate(postMean=preMean * percent_change , postSD=preSD  * percent_change)
+                                                            mutate(postMean=preMean + (preMean * percent_change) , postSD=preSD +(preSD  * percent_change))
   
   
   #arrange studies with groups
