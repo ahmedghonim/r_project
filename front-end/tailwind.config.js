@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
+    fontFamily: {
+      inconsolata: ["Inconsolata", "monospace"],
+    },
     container: {
       center: true,
       padding: "1rem",
