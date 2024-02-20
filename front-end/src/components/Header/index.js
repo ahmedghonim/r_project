@@ -51,7 +51,7 @@ const Header = ({ className }) => {
           <div className=" max-w-full">
             <Link
               href="/"
-              className={` rounded-lg overflow-hidden flex items-center justify-center gap-2 text-xl font-bold text-white hover:text-primary dark:hover:text-primary transition-all duration-300`}
+              className={` rounded-lg flex items-center justify-center gap-2 text-xl font-bold text-white hover:text-primary dark:hover:text-primary transition-all duration-300`}
             >
               <Image
                 src="/logo.jpg"
@@ -62,11 +62,8 @@ const Header = ({ className }) => {
               />
               <span>TreatMeta</span>
             </Link>
-            <span className="text-[12px] font-bold text-white text-nowrap">
-              " Where Data Gets the Treat It Deserves "
-            </span>
           </div>
-          <div className="flex w-full items-center justify-center px-10">
+          <div className="flex w-full items-center justify-end px-10">
             <div>
               <button
                 onClick={navbarToggleHandler}

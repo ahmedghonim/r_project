@@ -2,10 +2,7 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import ScrollUp from "@/components/Common/ScrollUp";
 import Hero from "@/components/Hero";
-
 import Brands from "@/components/Brands";
-import AboutSectionOne from "@/components/About/AboutSectionOne";
-import AboutSectionTwo from "@/components/About/AboutSectionTwo";
 import Testimonials from "@/components/Testimonials";
 import Conversions from "@/components/Conversions";
 import Contact from "@/components/Contact";

@@ -4,7 +4,7 @@ const Hero = () => {
   return (
     <div>
       <section id="home" className="relative z-10 overflow-hidden ">
-        <div className="relative h-[85vh] bg-gradient-to-tl from-blue-900 to-red-900  flex flex-col pt-40 !font-inconsolata">
+        <div className="relative h-[85vh] bg-gradient-to-tl from-blue-900 to-red-900  flex flex-col pt-32 !font-inconsolata">
           <div className="w-[300px] self-center z-10">
             <Image
               src="/logo.svg"
