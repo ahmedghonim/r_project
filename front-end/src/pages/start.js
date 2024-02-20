@@ -182,7 +182,7 @@ export default function Home() {
                   />
                 </div>
 
-                <div>
+                <div className="min-w-[200px]">
                   <label
                     htmlFor={"colors"}
                     className={`text-sm text-navy-700 text-white `}
@@ -277,9 +277,12 @@ export default function Home() {
               )}
             </>
           )}
-          {tableResult && (
+          {tableResult.length > 1 && (
             <HotTable
               data={tableResult}
+              columns={selectedCategory.map((item, index) => ({
+                [item.value]: selectTypes[index],
+              }))}
               colHeaders={keys(tableResult[0])}
               width="100%"
               licenseKey="non-commercial-and-evaluation"
