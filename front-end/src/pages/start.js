@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import { useState } from "react";
 import { usePostQuery, useGetQuery } from "@/hooks/useQueryHooks";
 import Table from "@/components/table";
@@ -42,17 +41,13 @@ export default function Home() {
       url: "/Func_IDs",
     });
 
-  const {
-    mutateAsync: mutateHandleOutputVariables,
-    isLoading: isLoadingOutputVariables,
-  } = usePostQuery({
+  const { mutateAsync: mutateHandleOutputVariables } = usePostQuery({
     url: "/Output_variables",
   });
 
-  const { mutateAsync: mutateHandleScripts, isLoading: isLoadingScripts } =
-    usePostQuery({
-      url: "/scripts/Task_manager",
-    });
+  const { mutateAsync: mutateHandleScripts } = usePostQuery({
+    url: "/scripts/Task_manager",
+  });
 
   const [category, setCategory] = useState([]);
 
