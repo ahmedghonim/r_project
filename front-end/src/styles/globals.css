@@ -9,7 +9,9 @@
     font-family: "Inter", sans-serif;
   }
 }
-
+.handsontable .currentRow {
+  background: #fce4ec;
+}
 @layer components {
   input[type="checkbox"]:checked ~ label span svg {
     @apply inline-flex;

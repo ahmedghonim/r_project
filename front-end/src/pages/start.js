@@ -7,9 +7,12 @@ import ReactSelect from "react-select";
 import Header from "@/components/Header";
 import ScrollUp from "@/components/Common/ScrollUp";
 import { keys, zipObject } from "lodash";
-import { HotTable } from "@handsontable/react";
+import { HotColumn, HotTable } from "@handsontable/react";
+import "handsontable/dist/handsontable.full.min.css";
+import { registerAllModules } from "handsontable/registry";
 
 export default function Home() {
+  registerAllModules();
   const [firstInput, setFirstInput] = useState({
     current_prepost: "0",
   });
@@ -111,6 +114,74 @@ export default function Home() {
       console.log(e);
     }
   }
+
+  // a renderer component
+  const ScoreRenderer = (props) => {
+    const { value } = props;
+    const color = value > 60 ? "#2ECC40" : "#FF4136";
+    return <span style={{ color }}>{value}</span>;
+  };
+
+  // a renderer component
+  const PromotionRenderer = (props) => {
+    const { value } = props;
+    if (value) {
+      return <span>&#10004;</span>;
+    }
+    return <span>&#10007;</span>;
+  };
+
+  // you can set `data` to an array of objects
+  const data = [
+    {
+      id: 1,
+      name: "Alex",
+      score: 10,
+      isPromoted: false,
+    },
+    {
+      id: 2,
+      name: "Adam",
+      score: 55,
+      isPromoted: false,
+    },
+    {
+      id: 3,
+      name: "Kate",
+      score: 61,
+      isPromoted: true,
+    },
+    {
+      id: 4,
+      name: "Max",
+      score: 98,
+      isPromoted: true,
+    },
+    {
+      id: 5,
+      name: "Lucy",
+      score: 59,
+      isPromoted: false,
+    },
+  ];
+
+  // a renderer component
+  const ColRenderer = ({ value, isFalse, col }) => {
+    const color = isFalse && "#FF4136";
+
+    return <span style={{ color }}>{value === "NA" ? "" : value}</span>;
+  };
+
+  function getIsNull() {
+    // return invalid value in arrays
+    return tableResult.map(({ invalid }) => {
+      if (invalid === 1) {
+        return true;
+      }
+      return false;
+    });
+  }
+  console.log("getIsNull() >>>> ", getIsNull());
   return (
     <div className="relative z-10 h-screen bg-gray-dark">
       <Header className={"bg-gray-dark"} />
@@ -272,17 +343,29 @@ export default function Home() {
               )}
             </>
           )}
-          {tableResult.length > 1 && (
-            <HotTable
-              data={tableResult}
-              columns={selectedCategory.map((item, index) => ({
-                [item.value]: selectTypes[index],
-              }))}
-              colHeaders={keys(tableResult[0])}
-              width="100%"
-              licenseKey="non-commercial-and-evaluation"
-            />
-          )}
+
+          <div className="w-full">
+            {tableResult.length > 1 && (
+              <HotTable
+                colHeaders={selectedCategory.map((item) => item.label)}
+                data={tableResult}
+                autoWrapCol={true}
+                rowHeaders={true}
+                width="100%"
+                height="auto"
+                manualColumnResize={true}
+                autoWrapRow={true}
+                startCols={selectedCategory.map((item) => item.label).length}
+                licenseKey="non-commercial-and-evaluation"
+              >
+                {Object.keys(tableResult[0]).map((item, i) => (
+                  <HotColumn data={item}>
+                    <ColRenderer hot-renderer col={item} />
+                  </HotColumn>
+                ))}
+              </HotTable>
+            )}
+          </div>
         </div>
       </div>
     </div>
