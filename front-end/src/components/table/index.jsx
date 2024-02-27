@@ -1,17 +1,23 @@
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { HotTable } from "@handsontable/react";
 import { registerAllModules } from "handsontable/registry";
 import "handsontable/dist/handsontable.full.css";
 
 // register Handsontable's modules
-registerAllModules();
 
-const Table = ({ setGetDataTable, selectedCategory, selectTypes }) => {
+const Table = ({
+  setGetDataTable,
+  selectedCategory,
+  selectTypes,
+  getDataTable,
+}) => {
+  registerAllModules();
   const hotRef = useRef(null);
 
   return (
     <>
       <HotTable
+        data={getDataTable}
         colHeaders={selectedCategory.map((item) => item.label)}
         ref={hotRef}
         startRows={1}
@@ -22,6 +28,7 @@ const Table = ({ setGetDataTable, selectedCategory, selectTypes }) => {
         startCols={selectedCategory.map((item) => item.label).length}
         autoWrapCol={true}
         rowHeaders={true}
+        height="auto"
         manualColumnResize={true}
         autoWrapRow={true}
         licenseKey="non-commercial-and-evaluation"

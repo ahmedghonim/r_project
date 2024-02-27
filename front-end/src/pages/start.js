@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePostQuery, useGetQuery } from "@/hooks/useQueryHooks";
 import Table from "@/components/table";
 import InputField from "@/components/fields/InputField";
@@ -22,7 +22,9 @@ export default function Home() {
   const [inputParams, setInputParams] = useState(null);
   const [funcIdsValues, setFuncIdsValues] = useState(null);
   const [outputVariables, setOutputVariables] = useState(null);
-
+  const [localCategoryResult, setLocalCategoryResult] = useState([]);
+  const [localSelectedCategory, setLocalSelectedCategory] = useState([]);
+  const [localDataResult, setLocalDataResult] = useState([]);
   const [getDataTable, setGetDataTable] = useState([]);
   const [tableResult, setTableResult] = useState([]);
   const { mutateAsync, isLoading } = usePostQuery({
@@ -90,9 +92,24 @@ export default function Home() {
       console.log(e);
     }
   }
+  useEffect(() => {
+    const oldLocalGetDataTable = localStorage.getItem("getDataTable");
+    const oldLocalData = localStorage.getItem("tableResult");
+    const oldLocalSelectedCategory = localStorage.getItem("selectedCategory");
+    if (oldLocalGetDataTable) {
+      setLocalCategoryResult(JSON.parse(oldLocalGetDataTable));
+    }
+    if (oldLocalData) {
+      setLocalDataResult(JSON.parse(oldLocalData));
+    }
+    if (oldLocalSelectedCategory) {
+      setLocalSelectedCategory(JSON.parse(oldLocalSelectedCategory));
+    }
+  }, [tableResult]);
 
   async function handleScripts() {
     const values = selectedCategory.map((item) => item.value);
+    console.log("getDataTable >>>> ", getDataTable);
     const df = getDataTable.map((row) => {
       let newRow = row.map((item) => item || "NA");
       newRow = newRow.map((item) =>
@@ -110,60 +127,44 @@ export default function Home() {
         category: firstInput.category,
       });
       setTableResult(data);
+      // save in local storage for later use
+      const oldLocalGetDataTable = localStorage.getItem("getDataTable");
+
+      if (oldLocalGetDataTable) {
+        const oldLocalData = JSON.parse(oldLocalGetDataTable);
+        oldLocalData.push(getDataTable); // Add the new getDataTable to the array
+
+        localStorage.setItem("getDataTable", JSON.stringify(oldLocalData)); // Store the updated array
+      } else {
+        localStorage.setItem(
+          "getDataTable",
+          JSON.stringify([getDataTable]) // Wrap the getDataTable in an array if it's not an array already
+        );
+      }
+
+      const oldLocal = localStorage.getItem("tableResult");
+      if (oldLocal) {
+        const oldLocalData = JSON.parse(oldLocal);
+        oldLocalData.push(data); // Add the new data to the array
+        localStorage.setItem("tableResult", JSON.stringify(oldLocalData)); // Store the updated array
+      } else {
+        localStorage.setItem("tableResult", JSON.stringify([data])); // Wrap the data in an array if it's not an array already
+      }
+      const oldSelectedCategory = localStorage.getItem("selectedCategory");
+      if (oldSelectedCategory) {
+        const oldLocalData = JSON.parse(oldSelectedCategory);
+        oldLocalData.push(data); // Add the new data to the array
+        localStorage.setItem("selectedCategory", JSON.stringify(oldLocalData)); // Store the updated array
+      } else {
+        localStorage.setItem(
+          "selectedCategory",
+          JSON.stringify([selectedCategory])
+        ); // Wrap the data in an array if it's not an array already
+      }
     } catch (e) {
       console.log(e);
     }
   }
-
-  // a renderer component
-  const ScoreRenderer = (props) => {
-    const { value } = props;
-    const color = value > 60 ? "#2ECC40" : "#FF4136";
-    return <span style={{ color }}>{value}</span>;
-  };
-
-  // a renderer component
-  const PromotionRenderer = (props) => {
-    const { value } = props;
-    if (value) {
-      return <span>&#10004;</span>;
-    }
-    return <span>&#10007;</span>;
-  };
-
-  // you can set `data` to an array of objects
-  const data = [
-    {
-      id: 1,
-      name: "Alex",
-      score: 10,
-      isPromoted: false,
-    },
-    {
-      id: 2,
-      name: "Adam",
-      score: 55,
-      isPromoted: false,
-    },
-    {
-      id: 3,
-      name: "Kate",
-      score: 61,
-      isPromoted: true,
-    },
-    {
-      id: 4,
-      name: "Max",
-      score: 98,
-      isPromoted: true,
-    },
-    {
-      id: 5,
-      name: "Lucy",
-      score: 59,
-      isPromoted: false,
-    },
-  ];
 
   // a renderer component
   const ColRenderer = ({ value, isFalse, col }) => {
@@ -171,23 +172,19 @@ export default function Home() {
 
     return <span style={{ color }}>{value === "NA" ? "" : value}</span>;
   };
-
-  function getIsNull() {
-    // return invalid value in arrays
-    return tableResult.map(({ invalid }) => {
-      if (invalid === 1) {
-        return true;
-      }
-      return false;
-    });
+  function clearAllLocaStorage() {
+    localStorage.removeItem("getDataTable");
+    localStorage.removeItem("tableResult");
+    setLocalCategoryResult([]);
+    setLocalDataResult([]);
   }
-  console.log("getIsNull() >>>> ", getIsNull());
+
   return (
-    <div className="relative z-10 h-screen bg-gray-dark">
+    <div className="relative z-10 min-h-screen bg-gray-dark">
       <Header className={"bg-gray-dark"} />
       <ScrollUp />
 
-      <div className="px-20 relative z-10 pt-28 w-full">
+      <div className="px-20 relative z-10 pt-28 w-full  h-full">
         <button
           onClick={() => {
             setFirstInput({
@@ -326,7 +323,7 @@ export default function Home() {
           </div>
           {outputVariables && (
             <>
-              <div className="my-5 w-full">
+              <div className="my-5 w-full ">
                 <Table
                   selectedCategory={selectedCategory}
                   setGetDataTable={setGetDataTable}
@@ -343,8 +340,23 @@ export default function Home() {
               )}
             </>
           )}
+          {!outputVariables && getDataTable.length > 1 && (
+            <div className="my-6 w-full">
+              <HotTable
+                colHeaders={selectedCategory.map((item) => item.label)}
+                data={getDataTable}
+                autoWrapCol={true}
+                rowHeaders={true}
+                width="100%"
+                height="auto"
+                manualColumnResize={true}
+                autoWrapRow={true}
+                licenseKey="non-commercial-and-evaluation"
+              />
+            </div>
+          )}
 
-          <div className="w-full">
+          <div className="my-5 w-full">
             {tableResult.length > 1 && (
               <HotTable
                 colHeaders={selectedCategory.map((item) => item.label)}
@@ -355,19 +367,78 @@ export default function Home() {
                 height="auto"
                 manualColumnResize={true}
                 autoWrapRow={true}
-                startCols={selectedCategory.map((item) => item.label).length}
                 licenseKey="non-commercial-and-evaluation"
-              >
-                {Object.keys(tableResult[0]).map((item, i) => (
-                  <HotColumn data={item}>
-                    <ColRenderer hot-renderer col={item} />
-                  </HotColumn>
-                ))}
-              </HotTable>
+              />
             )}
           </div>
+          {localDataResult.length !== 0 && (
+            <div className="border-t mt-10 bg-dark h-full flex flex-col gap-8 pb-10">
+              <button
+                className="linear rounded-[20px] mt-10 me-auto bg-red-500 px-4 py-2 text-base font-medium  transition duration-200 hover:bg-brand-800 active:bg-brand-700 text-dark "
+                onClick={clearAllLocaStorage}
+              >
+                Remove Local Storage
+              </button>
+              <div className="grid grid-cols-3 justify-center gap-9">
+                {localCategoryResult.map((_, index) => (
+                  <SingleConversion
+                    setSelectedCategory={setSelectedCategory}
+                    setGetDataTable={setGetDataTable}
+                    setTableResult={setTableResult}
+                    categoryValues={localCategoryResult[index]}
+                    localSelectedCategory={localSelectedCategory[index]}
+                    id={index}
+                    tableResult={localDataResult[index]}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+const SingleConversion = ({
+  categoryValues,
+  tableResult,
+  id,
+  setGetDataTable,
+  setTableResult,
+  setSelectedCategory,
+  localSelectedCategory,
+}) => {
+  return (
+    <>
+      <div
+        onClick={() => {
+          setGetDataTable(categoryValues);
+          setTableResult(tableResult);
+          setSelectedCategory(localSelectedCategory);
+        }}
+        className="wow rounded-xl  flex flex-col gap-4 justify-start items-start  h-full  group relative overflow-hidden shadow-lg duration-300 bg-primary cursor-pointer hover:shadow-xl hover:shadow-white"
+        data-wow-delay=".1s"
+      >
+        <span className=" right-6 top-6 z-20 inline-flex items-center justify-center rounded-full  bg-dark m-4 px-4 py-2 text-sm font-semibold capitalize text-white br">
+          {id + 1}
+        </span>
+
+        <div className="border-opacity-10 flex flex-wrap gap-4 text-base font-medium text-white	p-3">
+          {tableResult?.map(
+            (para, index) =>
+              index === 0 &&
+              Object.keys(para).map((item, i) => (
+                <span
+                  key={i}
+                  className="block mb-4 shadow-lg p-2 rounded-lg bg-dark"
+                >
+                  {item}
+                </span>
+              ))
+          )}
+        </div>
+      </div>
+    </>
+  );
+};

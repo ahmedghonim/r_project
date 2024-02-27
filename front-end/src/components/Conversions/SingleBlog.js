@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 const SingleConversion = ({ blog }) => {
   const { title, image, paragraph } = blog;
@@ -9,23 +8,17 @@ const SingleConversion = ({ blog }) => {
         className="wow fadeInUp hover:shadow-two h-full dark:hover:shadow-gray-dark group relative overflow-hidden rounded-sm bg-white shadow-one duration-300 dark:bg-dark"
         data-wow-delay=".1s"
       >
-        <Link
-          href="/blog-details"
-          className="relative block aspect-[37/22] w-full"
-        >
+        <div className="relative block aspect-[37/22] w-full">
           <span className="absolute right-6 top-6 z-20 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold capitalize text-white br">
             {/* {tags[0]} */}
           </span>
           <Image src={image} alt="image" fill className="bg-white p-10" />
-        </Link>
+        </div>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <h3>
-            <Link
-              href="/blog-details"
-              className="mb-4 block text-xl font-bold text-black hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl"
-            >
+            <div className="mb-4 block text-xl font-bold text-black hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl">
               {title}
-            </Link>
+            </div>
           </h3>
           <ul className="border-opacity-10 text-base font-medium text-white list-disc	">
             {paragraph.map((para, index) => (
