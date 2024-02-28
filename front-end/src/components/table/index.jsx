@@ -18,12 +18,15 @@ const Table = ({
     <>
       <HotTable
         data={getDataTable}
+        autoColumnSize
+        autoRowSize
         colHeaders={selectedCategory.map((item) => item.label)}
         ref={hotRef}
         startRows={1}
         columns={selectedCategory.map((item, index) => ({
           [item.value]: selectTypes[index],
         }))}
+        colWidths={100}
         width="100%"
         startCols={selectedCategory.map((item) => item.label).length}
         autoWrapCol={true}

@@ -360,7 +360,12 @@ export default function Home() {
             {tableResult.length > 1 && (
               <HotTable
                 colHeaders={selectedCategory.map((item) => item.label)}
-                data={tableResult}
+                data={tableResult.map((row) => {
+                  return keys(row).map((key) =>
+                    row[key] === "NA" ? "" : row[key]
+                  );
+                })}
+                autoColumnSize
                 autoWrapCol={true}
                 rowHeaders={true}
                 width="100%"
