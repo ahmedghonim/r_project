@@ -7,7 +7,7 @@ import ReactSelect from "react-select";
 import Header from "@/components/Header";
 import ScrollUp from "@/components/Common/ScrollUp";
 import { keys, zipObject } from "lodash";
-import { HotColumn, HotTable } from "@handsontable/react";
+import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";
 import { registerAllModules } from "handsontable/registry";
 
@@ -27,9 +27,11 @@ export default function Home() {
   const [localDataResult, setLocalDataResult] = useState([]);
   const [getDataTable, setGetDataTable] = useState([]);
   const [tableResult, setTableResult] = useState([]);
-  const { mutateAsync, isLoading } = usePostQuery({
+  const [sleetedUserIndex, setSleetedUserIndex] = useState([]);
+  const { mutateAsync } = usePostQuery({
     url: "/eligible_functions",
   });
+
   const { data: availableCategoriesData } = useGetQuery(
     "/available_categories",
     "/available_categories",
@@ -39,12 +41,13 @@ export default function Home() {
     }
   );
 
-  const { data: labData } = useGetQuery("/labs", "/labs", {});
+  const { data: labData = [] } = useGetQuery("/labs", "/labs", {
+    select: ({ data }) => data.map((item) => item.Conversion),
+  });
 
-  const { mutateAsync: mutateFuncId, isLoading: isLoadingFuncId } =
-    usePostQuery({
-      url: "/Func_IDs",
-    });
+  const { mutateAsync: mutateFuncId } = usePostQuery({
+    url: "/Func_IDs",
+  });
 
   const { mutateAsync: mutateHandleOutputVariables } = usePostQuery({
     url: "/Output_variables",
@@ -61,6 +64,7 @@ export default function Home() {
       const { data } = await mutateAsync(firstInput);
       const keys = data[0][1];
       const values = data[0][0];
+
       const categoryValue = keys.map((key, i) => {
         return { value: values[i], label: key };
       });
@@ -68,6 +72,10 @@ export default function Home() {
 
       setCategory(categoryValue);
       setSelectTypes(data[2]);
+      const selectedObject = {};
+      data[2].forEach((item, index) => (selectedObject[values[index]] = item));
+
+      setSleetedUserIndex(selectedObject);
     } catch (e) {
       console.log(e);
     }
@@ -109,12 +117,13 @@ export default function Home() {
 
   async function handleScripts() {
     const values = selectedCategory.map((item) => item.value);
-    console.log("getDataTable >>>> ", getDataTable);
+
     const df = getDataTable.map((row) => {
       let newRow = row.map((item) => item || "NA");
       newRow = newRow.map((item) =>
         typeof item === "number" ? parseFloat(item) : item
       );
+
       return zipObject(values, newRow);
     });
 
@@ -150,10 +159,11 @@ export default function Home() {
       } else {
         localStorage.setItem("tableResult", JSON.stringify([data])); // Wrap the data in an array if it's not an array already
       }
+
       const oldSelectedCategory = localStorage.getItem("selectedCategory");
       if (oldSelectedCategory) {
         const oldLocalData = JSON.parse(oldSelectedCategory);
-        oldLocalData.push(data); // Add the new data to the array
+        oldLocalData.push(selectedCategory); // Add the new data to the array
         localStorage.setItem("selectedCategory", JSON.stringify(oldLocalData)); // Store the updated array
       } else {
         localStorage.setItem(
@@ -166,18 +176,24 @@ export default function Home() {
     }
   }
 
-  // a renderer component
-  const ColRenderer = ({ value, isFalse, col }) => {
-    const color = isFalse && "#FF4136";
-
-    return <span style={{ color }}>{value === "NA" ? "" : value}</span>;
-  };
+  // a renderer component to render the table
   function clearAllLocaStorage() {
     localStorage.removeItem("getDataTable");
     localStorage.removeItem("tableResult");
     setLocalCategoryResult([]);
     setLocalDataResult([]);
   }
+
+  const autoComplete = selectedCategory.map(({ value }) => {
+    const result = {
+      type: sleetedUserIndex[value],
+      strict: true,
+    };
+    if (sleetedUserIndex[value] === "autocomplete" && labData) {
+      result.source = labData;
+    }
+    return result;
+  });
 
   return (
     <div className="relative z-10 min-h-screen bg-gray-dark">
@@ -328,6 +344,7 @@ export default function Home() {
                   selectedCategory={selectedCategory}
                   setGetDataTable={setGetDataTable}
                   selectTypes={selectTypes}
+                  autoComplete={autoComplete}
                 />
               </div>
               {tableResult.length < 1 && (
@@ -347,6 +364,7 @@ export default function Home() {
                 data={getDataTable}
                 autoWrapCol={true}
                 rowHeaders={true}
+                columns={autoComplete}
                 width="100%"
                 height="auto"
                 manualColumnResize={true}
@@ -365,6 +383,7 @@ export default function Home() {
                     row[key] === "NA" ? "" : row[key]
                   );
                 })}
+                columns={autoComplete}
                 autoColumnSize
                 autoWrapCol={true}
                 rowHeaders={true}

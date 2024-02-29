@@ -10,6 +10,7 @@ const Table = ({
   selectedCategory,
   selectTypes,
   getDataTable,
+  autoComplete,
 }) => {
   registerAllModules();
   const hotRef = useRef(null);
@@ -23,9 +24,7 @@ const Table = ({
         colHeaders={selectedCategory.map((item) => item.label)}
         ref={hotRef}
         startRows={1}
-        columns={selectedCategory.map((item, index) => ({
-          [item.value]: selectTypes[index],
-        }))}
+        columns={autoComplete}
         colWidths={100}
         width="100%"
         startCols={selectedCategory.map((item) => item.label).length}
