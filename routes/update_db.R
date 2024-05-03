@@ -44,10 +44,13 @@ library(utilities)
   
   categories<- read_excel("globals.xlsx", sheet = "Categories")
   
+  presets<- read_excel("globals.xlsx", sheet = "Presets")
+  
   dbWriteTable(mydb, "available", available, overwrite=TRUE)
   dbWriteTable(mydb, "mandatory", mandatory, overwrite=TRUE)
   dbWriteTable(mydb, "output_df", output_df, overwrite=TRUE)
   dbWriteTable(mydb, "df_names", df_names, overwrite=TRUE)
   dbWriteTable(mydb, "labs", labs, overwrite=TRUE)
   dbWriteTable(mydb, "categories", categories, overwrite=TRUE)
+  dbWriteTable(mydb, "presets", presets, overwrite=TRUE)
   dbDisconnect(mydb)
