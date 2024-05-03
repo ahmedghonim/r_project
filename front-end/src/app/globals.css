@@ -1,0 +1,247 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #f05445;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: #48647d;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --background: #080d20;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: red;
+    --card-foreground: blue;
+
+    --dark: #cccfd2;
+    --base-text: #f9fafb;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 10px;
+  }
+}
+
+@layer base {
+  * {
+    @apply font-sans border-border;
+  }
+
+  .markdown-content h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content h3 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content h4 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content h5 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content h6 {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .markdown-content ol > li {
+    margin-bottom: 0.5rem;
+    list-style: decimal !important; /* Use decimal numbering for ordered lists */
+  }
+
+  .markdown-content ul > li {
+    margin-bottom: 0.5rem;
+    list-style: disc !important; /* Use disc bullet points for unordered lists */
+  }
+
+  .markdown-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-content a {
+    color: #3182ce;
+    text-decoration: underline;
+  }
+
+  .markdown-content pre {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content code {
+    font-size: 0.9em;
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .markdown-content em,
+  .markdown-content i {
+    font-style: italic;
+  }
+
+  .markdown-content strong,
+  .markdown-content b {
+    font-weight: bold;
+  }
+
+  .markdown-content del,
+  .markdown-content s {
+    text-decoration: line-through;
+  }
+
+  .markdown-content blockquote {
+    margin-left: 1rem;
+    border-left: 2px solid #ccc;
+    padding-left: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+  }
+
+  .markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown-content {
+    @apply text-white;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.stroke {
+  color: rgba(240, 84, 69, 0.12);
+  text-align: center;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #f05445;
+  font-size: 80px !important;
+  font-style: normal;
+  z-index: 10000;
+  font-weight: 700;
+  line-height: 150%; /* 120px */
+}
+
+@media only screen and (max-width: 768px) {
+  .stroke {
+    font-size: 40px !important;
+  }
+}
+
+.layoutPadding {
+  @apply px-6 md:px-[118px];
+}
+
+/* thumbnail */
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-secondary/25;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded;
+}
+
+.curved-text {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+  font-size: 32px;
+}
+.curved-text span {
+  min-width: 0.5em;
+  text-align: center;
+  padding: 30px;
+  margin: 0px;
+  position: "absolute";
+
+  transform: rotateX(190deg);
+}
+
+th > div {
+  @apply bg-[#48647D] text-white text-base font-bold !p-2;
+}
+th {
+  @apply !p-0 w-fit;
+}
+
+td {
+  @apply !bg-[#1E3040] !text-base  !font-bold !text-white !text-center;
+}
