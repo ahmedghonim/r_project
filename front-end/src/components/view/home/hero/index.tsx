@@ -8,13 +8,6 @@ import ArrowDown from "@/svg/arrow-down.svg";
 import Link from "next/link";
 import { useScroll, motion, useTransform } from "framer-motion";
 function Hero() {
-  const target = React.useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: target,
-    offset: ["end end", "end start"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   return (
     <div className="relative flex flex-col items-center h-screen gap-4">
       <div className="pt-[169px] flex justify-center items-center flex-col gap-4">
@@ -35,7 +28,11 @@ function Hero() {
         <Link href="/start">
           <Button className="min-w-[155px]">Get Start</Button>
         </Link>
-        <Button className="min-w-[155px]" variant="ghost">
+        <Button
+          className="min-w-[155px]"
+          variant="ghost"
+          onClick={() => window.scrollTo({ top: 1000, behavior: "smooth" })}
+        >
           Explore Now{" "}
           <ArrowDown width={18} height={18} className="stroke-current" />
         </Button>
