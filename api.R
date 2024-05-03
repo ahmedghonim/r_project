@@ -47,6 +47,20 @@ function(){
 }
 
 
+#* Return available Conversion presets
+#' @return JSON object of a list with all conversion presets [Category, Groups, Prepost, Variables...]
+#' @serializer json
+#* @get /api/presets
+function(){
+  out_presets<- list()
+  for( co in 1:ncol(presets)){
+    cur<-presets[,co]
+    cur<- cur[!is.na(cur)]
+    out_presets<-append(out_presets, list(cur))
+  }
+  return(out_presets)
+}
+
 
 
 
