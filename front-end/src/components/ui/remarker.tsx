@@ -25,10 +25,7 @@ const RemarkFC = ({ doc }: RemarkFCProps): JSX.Element => {
    */
   return (
     <div className="markdown-content">
-      <Markdown
-        remarkPlugins={[remarkGfm, RemarkMathPlugin]}
-        rehypePlugins={[rehypeKatex]}
-      >
+      <Markdown remarkPlugins={[remarkGfm, RemarkMathPlugin, rehypeKatex]}>
         {doc}
       </Markdown>
     </div>
