@@ -4,21 +4,13 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
-import ScrollTop from "@/components/layout/footer/scroll-top";
 
 const fontSans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-export async function generateMetadata(
-  {
-    params: { lang },
-  }: {
-    params: { lang: string };
-  },
-  cookieLang: string | undefined
-): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       template: `TrateMeta | %s`,
@@ -78,8 +70,8 @@ export default function RootLayout({
         )}
       >
         <Nav />
-        <main className="relative  layoutPadding overflow-x-hidden">
-          <div className="fixed w-[479.365px] h-[507.308px] rotate-[12.185deg] bg-[#48647D3D] blur-[150px] left-10 top-10 -translate-x-1/2  rounded-[507.308px]" />
+        <main className="relative overflow-x-hidden layoutPadding">
+          <div className="fixed w-[479.365px] h-[507.308px] rotate-[12.185deg] blur-[150px] left-10 top-10 -translate-x-1/2  rounded-[507.308px]" />
           {children}
           <Footer />
         </main>

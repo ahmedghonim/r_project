@@ -7,7 +7,7 @@ import CopyRight from "./copy-right";
 
 function Footer() {
   return (
-    <div className="flex flex-col justify-end md:h-screen gap-6 ">
+    <div className="flex flex-col justify-end gap-6 md:h-screen bg-background">
       <FooterContactUsSection />
       <div className="md:w-[80%] mx-auto md:mt-16 mt-11 w-full">
         <FooterSiteMap />
