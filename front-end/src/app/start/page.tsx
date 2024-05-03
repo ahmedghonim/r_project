@@ -6,7 +6,6 @@ import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";
 import { registerAllModules } from "handsontable/registry";
 import HandsonTable from "@/components/ui/handson-table";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { fetchData } from "@/lib/fetchData";
 import Select from "@/components/ui/select";
@@ -202,8 +201,8 @@ export default function StartPage() {
 
   return (
     <div className="w-full  h-full pt-[170px]">
-      <div className="space-y-4 text-center pb-12">
-        <div className=" flex-col flex relative">
+      <div className="pb-12 space-y-4 text-center">
+        <div className="relative flex flex-col ">
           <Text variant="white" size="f2">
             Embark on Your{" "}
             <span className="relative mx-2">
@@ -221,10 +220,10 @@ export default function StartPage() {
         </Text>
       </div>
 
-      <div className=" flex  flex-col ">
-        <div className="flex items-end gap-7 w-full ">
+      <div className="flex flex-col ">
+        <div className="flex items-end w-full gap-7 ">
           {category.length < 1 && (
-            <div className="grid grid-cols-12 gap-6 w-full items-end">
+            <div className="grid items-end w-full grid-cols-12 gap-6">
               <div className="col-span-4">
                 <Input
                   label="Current Groups"
@@ -252,7 +251,7 @@ export default function StartPage() {
                       category: e.value.toString(),
                     });
                   }}
-                  className="basic-multi-select z-10"
+                  className="z-10 basic-multi-select"
                   classNamePrefix="select"
                   onBlur={() => setOpenSelect(false)}
                   onFocus={() => setOpenSelect(true)}
@@ -260,7 +259,7 @@ export default function StartPage() {
                 />
               </div>
 
-              <div className="col-span-3 flex gap-3">
+              <div className="flex col-span-3 gap-3">
                 <Button onClick={handleFirstInput} className="w-full h-[54px]">
                   Next
                 </Button>
@@ -286,7 +285,7 @@ export default function StartPage() {
               </div>
               <label
                 htmlFor="current_prepost"
-                className="cursor-pointer text-base font-medium text-white col-span-12 gap-3 flex items-center w-fit"
+                className="flex items-center col-span-12 gap-3 text-base font-medium text-white cursor-pointer w-fit"
               >
                 <Input
                   className="w-5 h-5 "
@@ -306,7 +305,7 @@ export default function StartPage() {
             </div>
           )}
           {category.length !== 0 && !outputVariables && (
-            <div className="flex gap-6 items-end w-full">
+            <div className="flex items-end w-full gap-6">
               <div className="flex-1">
                 <Select
                   label="Variables"
@@ -361,7 +360,7 @@ export default function StartPage() {
           )}
         </div>
         {outputVariables && (
-          <div className="space-y-6 mt-10">
+          <div className="mt-10 space-y-6">
             <div className="flex justify-between">
               <Text size="tee" variant="white">
                 Convert your data here
@@ -373,7 +372,7 @@ export default function StartPage() {
                 </Button>
               )}
             </div>
-            <div className="my-5 w-full ">
+            <div className="w-full my-5 ">
               <HandsonTable
                 selectedCategory={selectedCategory}
                 setGetDataTable={setGetDataTable}
@@ -383,7 +382,7 @@ export default function StartPage() {
           </div>
         )}
         {!outputVariables && getDataTable.length > 1 && (
-          <div className="my-6 w-full">
+          <div className="w-full my-6">
             <Text size="tee" variant="white">
               Results
             </Text>
@@ -403,7 +402,7 @@ export default function StartPage() {
           </div>
         )}
 
-        <div className="my-5 w-full">
+        <div className="w-full my-5">
           {tableResult.length > 1 && (
             <HotTable
               colHeaders={selectedCategory.map((item: any) => item.label)}
@@ -456,21 +455,21 @@ const SingleConversion = ({
           setTableResult(tableResult);
           setSelectedCategory(localSelectedCategory);
         }}
-        className="wow rounded-xl  flex flex-col gap-4 justify-start items-start  h-full  group relative overflow-hidden shadow-lg duration-300 bg-primary cursor-pointer hover:shadow-xl hover:shadow-white"
+        className="relative flex flex-col items-start justify-start h-full gap-4 overflow-hidden duration-300 shadow-lg cursor-pointer wow rounded-xl group bg-primary hover:shadow-xl hover:shadow-white"
         data-wow-delay=".1s"
       >
-        <span className=" right-6 top-6 z-20 inline-flex items-center justify-center rounded-full  bg-dark m-4 px-4 py-2 text-sm font-semibold capitalize text-white br">
+        <span className="z-20 inline-flex items-center justify-center px-4 py-2 m-4 text-sm font-semibold text-white capitalize rounded-full  right-6 top-6 bg-dark br">
           {id + 1}
         </span>
 
-        <div className="border-opacity-10 flex flex-wrap gap-4 text-base font-medium text-white	p-3">
+        <div className="flex flex-wrap gap-4 p-3 text-base font-medium text-white border-opacity-10">
           {tableResult?.map(
             (para, index) =>
               index === 0 &&
               Object.keys(para).map((item, i) => (
                 <span
                   key={i}
-                  className="block mb-4 shadow-lg p-2 rounded-lg bg-dark"
+                  className="block p-2 mb-4 rounded-lg shadow-lg bg-dark"
                 >
                   {item}
                 </span>
