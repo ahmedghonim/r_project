@@ -43,13 +43,10 @@ export default function StartPage() {
   useEffect(() => {
     fetchData("/presets").then((res: any) => {
       setCurrentPresets(res.data);
-      
-
     });
   }, [slug]);
   useEffect(()=>{
     if (slug && currentPresets.length>3) {
-      console.log(">>>PRESETS", +slug, currentPresets)
       const fInput = currentPresets[+slug];
       setFirstInput({
         current_groups: fInput[1],
@@ -73,7 +70,7 @@ export default function StartPage() {
     }
   }, [firstInput]);
 useEffect(()=>{
-  if(inputParams && selectedCategory){
+  if(inputParams && selectedCategory && slug){
     handleFunc_IDs();
   }
 },[inputParams, selectedCategory])
