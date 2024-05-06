@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Line from "@/assets/svg/line.svg";
-import { keys, zipObject } from "lodash";
+import { first, keys, zipObject } from "lodash";
 import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";
 import { registerAllModules } from "handsontable/registry";
@@ -36,35 +36,47 @@ export default function StartPage() {
   const [availableCategoriesData, setAvailableCategoriesData] = useState<any>(
     []
   );
+  const [currentPresets, setCurrentPresets]=useState<any>([]);
 
   const [category, setCategory] = useState([]);
   const [labData, setLabData] = useState<any>([]);
   useEffect(() => {
     fetchData("/presets").then((res: any) => {
-      const apiPresets = res.data;
+      setCurrentPresets(res.data);
+      
 
-      if (slug && apiPresets) {
-        const fInput = apiPresets[+slug];
-        setFirstInput({
-          current_groups: fInput[1],
-          category: fInput[0],
-          current_prepost: fInput[2],
-        });
-        const selectedCategory = fInput.slice(3).map((item: any) => {
-          return { value: item, label: item };
-        });
-        setSelectedCategory(selectedCategory);
-      }
     });
   }, [slug]);
+  useEffect(()=>{
+    if (slug && currentPresets.length>3) {
+      console.log(">>>PRESETS", +slug, currentPresets)
+      const fInput = currentPresets[+slug];
+      setFirstInput({
+        current_groups: fInput[1],
+        category: fInput[0],
+        current_prepost: fInput[2],
+      });
+      
+    }
+  },[currentPresets])
 
   useEffect(() => {
-    if (firstInput && slug) {
+    if (Object.keys(firstInput).length==3 && slug) {
       handleFirstInput();
-      handleFunc_IDs();
+      const fInput = currentPresets[+slug];
+      renameVariables(fInput[2], fInput[1], fInput.slice(3)).then((res:any)=>{
+        const selectedCategory = fInput.slice(3).map((item: any, i:any) => {
+          return { value: item, label: res[i] };
+        });
+        setSelectedCategory(selectedCategory);
+      });
     }
   }, [firstInput]);
-
+useEffect(()=>{
+  if(inputParams && selectedCategory){
+    handleFunc_IDs();
+  }
+},[inputParams, selectedCategory])
   useEffect(() => {
     fetchData("/available_categories").then((data: any) => {
       setAvailableCategoriesData(
@@ -112,7 +124,21 @@ export default function StartPage() {
       console.log(e);
     }
   }
-
+  //Rename variables
+  async function renameVariables(prepost:boolean, groups: number, vars:Array<string>) {
+    try {
+      const { data } = await fetchData<any>("/Rename_variables", {
+        method: "POST",
+        body: {var_names:JSON.stringify(vars), 
+                current_groups:groups, 
+                current_prepost:prepost},
+      });
+      return data;
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
   //FuncIDs
   async function handleFunc_IDs() {
     const categoryValue = selectedCategory.map((item: any) => {
