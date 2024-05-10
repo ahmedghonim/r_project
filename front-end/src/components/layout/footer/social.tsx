@@ -1,7 +1,7 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
 import X from "@/svg/X.svg";
-import LinkedIn from "@/svg/linkedin.svg";
+// import LinkedIn from "@/svg/linkedin.svg";
 import Instagram from "@/svg/instagram.svg";
 import WhatsApp from "@/svg/whatsapp.svg";
 import Link from "next/link";
@@ -18,7 +18,7 @@ function Social() {
     },
     {
       name: "LinkedIn",
-      icon: LinkedIn,
+      icon: Instagram,
     },
     {
       name: "X",
