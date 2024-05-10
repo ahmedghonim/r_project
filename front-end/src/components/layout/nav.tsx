@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Logo from "@/svg/logo.svg";
-import ArrowRight from "@/svg/arrow-right.svg";
-import History from "@/svg/history.svg";
+import Logo from "@/svg/logo";
+import ArrowRight from "@/svg/arrow-right";
+import History from "@/svg/history";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

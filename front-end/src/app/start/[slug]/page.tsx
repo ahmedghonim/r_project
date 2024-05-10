@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import Line from "@/assets/svg/line.svg";
+import Line from "@/assets/svg/line";
 import { first, keys, zipObject } from "lodash";
 import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";
@@ -36,7 +36,7 @@ export default function StartPage() {
   const [availableCategoriesData, setAvailableCategoriesData] = useState<any>(
     []
   );
-  const [currentPresets, setCurrentPresets]=useState<any>([]);
+  const [currentPresets, setCurrentPresets] = useState<any>([]);
 
   const [category, setCategory] = useState([]);
   const [labData, setLabData] = useState<any>([]);
@@ -45,35 +45,36 @@ export default function StartPage() {
       setCurrentPresets(res.data);
     });
   }, [slug]);
-  useEffect(()=>{
-    if (slug && currentPresets.length>3) {
+  useEffect(() => {
+    if (slug && currentPresets.length > 3) {
       const fInput = currentPresets[+slug];
       setFirstInput({
         current_groups: fInput[1],
         category: fInput[0],
         current_prepost: fInput[2],
       });
-      
     }
-  },[currentPresets])
+  }, [currentPresets]);
 
   useEffect(() => {
-    if (Object.keys(firstInput).length==3 && slug) {
+    if (Object.keys(firstInput).length == 3 && slug) {
       handleFirstInput();
       const fInput = currentPresets[+slug];
-      renameVariables(fInput[2], fInput[1], fInput.slice(3)).then((res:any)=>{
-        const selectedCategory = fInput.slice(3).map((item: any, i:any) => {
-          return { value: item, label: res[i] };
-        });
-        setSelectedCategory(selectedCategory);
-      });
+      renameVariables(fInput[2], fInput[1], fInput.slice(3)).then(
+        (res: any) => {
+          const selectedCategory = fInput.slice(3).map((item: any, i: any) => {
+            return { value: item, label: res[i] };
+          });
+          setSelectedCategory(selectedCategory);
+        }
+      );
     }
   }, [firstInput]);
-useEffect(()=>{
-  if(inputParams && selectedCategory && slug){
-    handleFunc_IDs();
-  }
-},[inputParams, selectedCategory])
+  useEffect(() => {
+    if (inputParams && selectedCategory && slug) {
+      handleFunc_IDs();
+    }
+  }, [inputParams, selectedCategory]);
   useEffect(() => {
     fetchData("/available_categories").then((data: any) => {
       setAvailableCategoriesData(
@@ -122,16 +123,21 @@ useEffect(()=>{
     }
   }
   //Rename variables
-  async function renameVariables(prepost:boolean, groups: number, vars:Array<string>) {
+  async function renameVariables(
+    prepost: boolean,
+    groups: number,
+    vars: Array<string>
+  ) {
     try {
       const { data } = await fetchData<any>("/Rename_variables", {
         method: "POST",
-        body: {var_names:JSON.stringify(vars), 
-                current_groups:groups, 
-                current_prepost:prepost},
+        body: {
+          var_names: JSON.stringify(vars),
+          current_groups: groups,
+          current_prepost: prepost,
+        },
       });
       return data;
-      
     } catch (e) {
       console.log(e);
     }

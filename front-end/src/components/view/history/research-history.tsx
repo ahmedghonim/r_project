@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import DeleteIcon from "@/svg/delete.svg";
+import DeleteIcon from "@/svg/delete";
 
 function ResearchHistory() {
   function deleteHandler(id: number) {}

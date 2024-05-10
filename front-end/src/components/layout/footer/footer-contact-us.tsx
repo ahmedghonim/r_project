@@ -1,7 +1,7 @@
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import React from "react";
-import Arrow from "@/svg/right-arrow.svg";
+import Arrow from "@/svg/right-arrow";
 function FooterContactUsSection() {
   return (
     <div className="relative flex justify-between p-8 overflow-hidden bg-opacity-50 rounded-md bg-secondary-foreground mt-10 md:mt-0">

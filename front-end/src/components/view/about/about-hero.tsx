@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "@/components/ui/text";
 import AboutImage from "@/assets/img/about.png";
 import Image from "next/image";
-import AboutCircle from "@/svg/about_circle.svg";
+import AboutCircle from "@/svg/about_circle";
 function AboutHero() {
   return (
     <div className="grid grid-cols-12 items-center h-screen gap-7 pt-[10%] pd:mt-0">

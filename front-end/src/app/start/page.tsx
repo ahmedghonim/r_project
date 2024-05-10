@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import Line from "@/assets/svg/line.svg";
+import Line from "@/assets/svg/line";
 import { keys, zipObject } from "lodash";
 import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";

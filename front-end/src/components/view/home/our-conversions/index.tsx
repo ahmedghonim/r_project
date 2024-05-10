@@ -1,10 +1,10 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import Icon1 from "@/svg/mean_and_standard_deviation.svg";
-import Icon2 from "@/svg/effect_size_estimation.svg";
-import Icon3 from "@/svg/mean_and_sd_calculation.svg";
-import Icon4 from "@/svg/mean_and_sd_combination.svg";
-import Icon5 from "@/svg/units_and_labs_conversions.svg";
+import Icon1 from "@/svg/mean_and_standard_deviation";
+import Icon2 from "@/svg/effect_size_estimation";
+import Icon3 from "@/assets/svg/mean_and_SD_calculation3";
+import Icon4 from "@/assets/svg/mean_and_SD_combination2";
+import Icon5 from "@/svg/units_and_labs_conversions";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 

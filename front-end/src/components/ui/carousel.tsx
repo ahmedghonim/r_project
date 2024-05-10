@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import ArrowIcon from "@/svg/ca_arrow.svg";
+import ArrowIcon from "@/svg/ca_arrow";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";

@@ -4,8 +4,8 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import RemarkFC from "@/components/ui/remarker";
-import Burger from "@/svg/burger.svg";
-import Close from "@/svg/close.svg";
+import Burger from "@/svg/burger";
+import Close from "@/svg/close";
 const GuidePage = () => {
   const [open, setOpen] = useState(true);
   const doc = `# Conversions guide

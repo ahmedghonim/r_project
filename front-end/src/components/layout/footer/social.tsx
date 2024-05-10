@@ -1,9 +1,9 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import X from "@/svg/X.svg";
-// import LinkedIn from "@/svg/linkedin.svg";
-import Instagram from "@/svg/instagram.svg";
-import WhatsApp from "@/svg/whatsapp.svg";
+import X from "@/svg/X";
+// import LinkedIn from "@/svg/linkedin";
+import Instagram from "@/svg/instagram";
+import WhatsApp from "@/svg/whatsapp";
 import Link from "next/link";
 
 function Social() {
