@@ -22,7 +22,7 @@ services:
       - ./api.R:/app/api.R
     ports:
       - 8000:8000
-    mem_limit: 1g
+    mem_limit: 0.5g
     networks:
       - rplumber-network
 
