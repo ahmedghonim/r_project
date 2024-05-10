@@ -1,6 +1,6 @@
 import React from "react";
 
-const LinkedInPage = (props: any) => {
+const LinkedIn = (props: any) => {
   return (
     <svg
       {...props}
@@ -19,4 +19,4 @@ const LinkedInPage = (props: any) => {
   );
 };
 
-export default LinkedInPage;
+export default LinkedIn;
