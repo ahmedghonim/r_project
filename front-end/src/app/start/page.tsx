@@ -14,9 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 
 export default function StartPage() {
-  const searchParams = useSearchParams();
-  const id = searchParams?.get("id");
-
   registerAllModules();
   const [firstInput, setFirstInput] = useState<any>({
     current_prepost: "0",
@@ -112,16 +109,6 @@ export default function StartPage() {
       console.log(e);
     }
   }
-  useEffect(() => {
-    const oldLocalGetDataTable = localStorage.getItem("getDataTable");
-
-    const oldLocalSelectedCategory = localStorage.getItem("selectedCategory");
-    if (id) {
-      setGetDataTable(JSON.parse(oldLocalGetDataTable || "[]")?.[id]);
-      setTableResult(tableResult);
-      setSelectedCategory(JSON.parse(oldLocalSelectedCategory || "[]")?.[id]);
-    }
-  }, [id]);
 
   async function handleScripts() {
     const values = selectedCategory.map((item: any) => item.value);

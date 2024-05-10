@@ -6,7 +6,7 @@ import TextLogo from "@/svg/text_logo.svg";
 import SiteInfo from "./site-info";
 import ArrowDown from "@/svg/arrow-down.svg";
 import Link from "next/link";
-import { useScroll, motion, useTransform } from "framer-motion";
+
 function Hero() {
   return (
     <div className="relative flex flex-col items-center h-screen gap-4">
