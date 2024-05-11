@@ -13,14 +13,14 @@ const fontSans = Work_Sans({
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
-      template: `TrateMeta | %s`,
-      default: "TrateMeta",
+      template: `TreatMeta | %s`,
+      default: "TreatMeta",
     },
     description: "description",
     keywords: "keywords",
-    authors: [{ name: "TrateMeta" }],
-    applicationName: "TrateMeta",
-    metadataBase: new URL("https://www.TrateMeta.com"),
+    authors: [{ name: "TreatMeta" }],
+    applicationName: "TreatMeta",
+    metadataBase: new URL("https://www.TreatMeta.com"),
     alternates: {
       canonical: "en",
       languages: {
@@ -41,15 +41,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
     openGraph: {
       type: "website",
-      title: "TrateMeta",
-      url: "https://www.TrateMeta.com",
-      siteName: "TrateMeta",
+      title: "TreatMeta",
+      url: "https://www.TreatMeta.com",
+      siteName: "TreatMeta",
       images: [
         {
           url: "/public/favicon.ico",
           width: 800,
           height: 600,
-          alt: "TrateMeta",
+          alt: "TreatMeta",
         },
       ],
     },
