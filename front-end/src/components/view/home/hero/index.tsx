@@ -2,11 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import React from "react";
-import TextLogo from "@/svg/text_logo.svg";
+import TextLogo from "@/svg/text_logo";
 import SiteInfo from "./site-info";
-import ArrowDown from "@/svg/arrow-down.svg";
+import ArrowDown from "@/svg/arrow-down";
 import Link from "next/link";
-import { useScroll, motion, useTransform } from "framer-motion";
+
 function Hero() {
   return (
     <div className="relative flex flex-col items-center h-screen gap-4">

@@ -1,12 +1,12 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import CheckIcon from "@/svg/check.svg";
+import CheckIcon from "@/svg/check";
 import Image from "next/image";
-import TreatmetaCircle from "@/svg/treatmeta_circle.svg";
-import TreatmetaSquare from "@/svg/treatmeta_square.svg";
+import TreatmetaCircle from "@/svg/treatmeta_circle";
+import TreatmetaSquare from "@/svg/treatmeta_square";
 import treatmetaImage from "@/assets/img/treatmeta.png";
 import { Button } from "@/components/ui/button";
-import RightArrow from "@/svg/right-arrow.svg";
+import RightArrow from "@/svg/right-arrow";
 import Link from "next/link";
 
 function TreatmentSection() {

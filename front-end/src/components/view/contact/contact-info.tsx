@@ -1,12 +1,12 @@
 import { Text } from "@/components/ui/text";
 import React from "react";
-import X from "@/svg/X.svg";
-import LinkedIn from "@/svg/linkedIn.svg";
-import Instagram from "@/svg/instagram.svg";
-import WhatsApp from "@/svg/whatsapp.svg";
-import Phone from "@/svg/phone.svg";
-import Email from "@/svg/email.svg";
-import Location from "@/svg/location.svg";
+import X from "@/svg/X";
+import LinkedIn from "@/svg/linkedIn";
+import Instagram from "@/svg/instagram";
+import WhatsApp from "@/svg/whatsapp";
+import Phone from "@/svg/phone";
+import Email from "@/svg/email";
+import Location from "@/svg/location";
 function ContactInfo() {
   return (
     <div className="w-full flex  flex-col bg-[#1E3040] p-8 justify-start relative flex-1 h-full">

@@ -1,10 +1,10 @@
 import React from "react";
 import { Text } from "@/components/ui/text";
-import Person from "@/svg/person.svg";
-import Light from "@/svg/light.svg";
-import Erth from "@/svg/erth.svg";
+import Person from "@/svg/person";
+import Light from "@/svg/light";
+import Erth from "@/svg/erth";
 import { cn } from "@/lib/utils";
-import Zamp from "@/svg/zamp.svg";
+import Zamp from "@/svg/zamp";
 import Image from "next/image";
 import visionImg from "@/assets/img/vision.jpg";
 

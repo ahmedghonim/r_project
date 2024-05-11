@@ -4,8 +4,8 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import RemarkFC from "@/components/ui/remarker";
-import Burger from "@/svg/burger.svg";
-import Close from "@/svg/close.svg";
+import Burger from "@/svg/burger";
+import Close from "@/svg/close";
 import { Client } from "@notionhq/client"
 import {NotionToMarkdown} from "notion-to-md"
 
@@ -19,7 +19,6 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
 
 const GuidePage = () => {
   const [open, setOpen] = useState(true);
-  console.log(">>>", n2m);
   const doc = `# Conversions guide
 ---
 

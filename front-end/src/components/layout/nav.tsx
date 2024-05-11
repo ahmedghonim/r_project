@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import Logo from "@/svg/logo.svg";
-import ArrowRight from "@/svg/arrow-right.svg";
-import History from "@/svg/history.svg";
+import Logo from "@/svg/logo";
+import ArrowRight from "@/svg/arrow-right";
+import History from "@/svg/history";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { tabs } from "./chared";
-import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 function Nav() {
   const pathname = usePathname();
@@ -89,22 +88,8 @@ function Nav() {
                   onClick={() => setOpenSidBar(!openSidBar)}
                   className="cursor-pointer active:scale-95"
                 >
-                  <motion.div
-                    animate={{
-                      rotate: 45,
-                      x: 1,
-                      y: 2,
-                    }}
-                    className="w-5 h-1 bg-white"
-                  ></motion.div>
-                  <motion.div
-                    animate={{
-                      rotate: -45,
-                      x: 1,
-                      y: -2,
-                    }}
-                    className="w-5 h-1 bg-white "
-                  ></motion.div>
+                  <div className="w-5 h-1 bg-white"></div>
+                  <div className="w-5 h-1 bg-white "></div>
                 </button>
               </div>
               <div className="mt-[57px] flex flex-col gap-4">

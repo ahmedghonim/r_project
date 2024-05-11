@@ -1,4 +1,4 @@
-import EmptyIcon from "@/svg/empty.svg";
+import EmptyIcon from "@/svg/empty";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import Link from "next/link";

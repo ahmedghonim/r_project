@@ -3,8 +3,8 @@ import React from "react";
 import { Text } from "@/components/ui/text";
 import Image from "next/image";
 import mission from "@/assets/img/mission.png";
-import ArrowRight from "@/svg/arrow-right.svg";
-import Ellipse_1 from "@/svg/Ellipse_1.svg";
+import ArrowRight from "@/svg/arrow-right";
+import Ellipse_1 from "@/svg/Ellipse_1";
 import Link from "next/link";
 
 function AboutMission() {

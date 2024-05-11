@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import Arrow from "@/svg/right-arrow.svg";
+import Arrow from "@/svg/right-arrow";
 
 function ScrollTop() {
   //scroll top
