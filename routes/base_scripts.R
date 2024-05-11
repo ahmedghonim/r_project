@@ -182,7 +182,7 @@ calculate_cont<-function(df){
 
 combine_MeanSD<-function(df){
 
-  
+
   
   df<-df%>%group_by(Study_ID)
   study_id<-df%>%group_by(Study_ID)%>%group_keys()
@@ -242,7 +242,7 @@ unit_convert<-function(x,unit){
   )}
 }
 
-char_cols<-df_names%>%filter(type=="char")
+char_cols<-df_names%>%filter(type=="text")
 char_cols<-char_cols$internal
 
 #' Convert Standard error and sample size into Standard Deviation
@@ -256,10 +256,8 @@ char_cols<-char_cols$internal
 #' @serializer json list(na="string")
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
-
   df<-fromJSON(df)
   df<-df%>%filter(if_all(everything(), ~ !is.na(.x) ))
-  
   #find a better way to exclude string variables
   if("Study_ID" %in% colnames(df)){
     
@@ -296,7 +294,6 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     }
     colnames(df)<-c(current_outs[is.na(output_placeholder_indices)], old_colnames)
   }
-  
   validated_df<-Validate_requirements(funcIDs, df, mandatory_inputs, current_prepost)%>%rowid_to_column("ID")
   
   valid_rows<-validated_df%>%filter(invalid==0)

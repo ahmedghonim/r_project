@@ -6,8 +6,20 @@ import Link from "next/link";
 import RemarkFC from "@/components/ui/remarker";
 import Burger from "@/svg/burger.svg";
 import Close from "@/svg/close.svg";
+import { Client } from "@notionhq/client"
+import {NotionToMarkdown} from "notion-to-md"
+
+const notion = new Client({
+  auth: process.env.NOTION_ACCESS_TOCKEN,
+});
+
+// passing notion client to the option
+const n2m = new NotionToMarkdown({ notionClient: notion });
+
+
 const GuidePage = () => {
   const [open, setOpen] = useState(true);
+  console.log(">>>", n2m);
   const doc = `# Conversions guide
 ---
 

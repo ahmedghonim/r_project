@@ -29,6 +29,7 @@ export default function StartPage() {
   const [outputVariables, setOutputVariables] = useState<any>(null);
   const [getDataTable, setGetDataTable] = useState<any>([]);
   const [tableResult, setTableResult] = useState<any>([]);
+  const [outputColumns, setOutputColumns]= useState<any>([]);
   const [sleetedUserIndex, setSleetedUserIndex] = useState<any>([]);
   const [availableCategoriesData, setAvailableCategoriesData] = useState<any>(
     []
@@ -54,7 +55,21 @@ export default function StartPage() {
       });
     });
   }, []);
-
+    //Rename variables
+    async function renameVariables(prepost:boolean, groups: number, vars:Array<string>) {
+      try {
+        const { data } = await fetchData<any>("/Rename_variables", {
+          method: "POST",
+          body: {var_names:JSON.stringify(vars), 
+                  current_groups:groups, 
+                  current_prepost:prepost},
+        });
+        return data;
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
   async function handleFirstInput() {
     try {
       const { data } = await fetchData<any>("/eligible_functions", {
@@ -146,7 +161,10 @@ export default function StartPage() {
           category: firstInput?.category,
         },
       });
-      setTableResult(data);
+      console.log(firstInput);
+      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
+      setOutputColumns(renamedCols);
+      setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
       // save in local storage for later use
       const oldLocalGetDataTable = localStorage.getItem("getDataTable");
 
@@ -275,6 +293,7 @@ export default function StartPage() {
                     setInputParams([]);
                     setFuncIdsValues([]);
                     setOutputVariables(null);
+                    setOutputColumns([]);
                     setGetDataTable([]);
                     setTableResult([]);
                   }}
@@ -348,6 +367,7 @@ export default function StartPage() {
                     setInputParams([]);
                     setFuncIdsValues([]);
                     setOutputVariables(null);
+                    setOutputColumns([]);
                     setGetDataTable([]);
                     setTableResult([]);
                   }}
@@ -390,9 +410,10 @@ export default function StartPage() {
             <HotTable
               colHeaders={selectedCategory.map((item: any) => item.label)}
               data={getDataTable}
+              columns={autoComplete}
+              autoColumnSize
               autoWrapCol={true}
               rowHeaders={true}
-              columns={autoComplete}
               width="100%"
               height="auto"
               manualColumnResize={true}
@@ -405,7 +426,7 @@ export default function StartPage() {
         <div className="w-full my-5">
           {tableResult.length > 1 && (
             <HotTable
-              colHeaders={selectedCategory.map((item: any) => item.label)}
+              colHeaders={outputColumns}
               data={tableResult.map((row: any) => {
                 return keys(row).map((key) =>
                   row[key] === "NA" ? "" : row[key]
