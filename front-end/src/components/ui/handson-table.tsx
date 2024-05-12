@@ -37,9 +37,8 @@ const HandsonTable = ({
         autoRowSize
         colHeaders={selectedCategory.map((item: any) => item.label)}
         ref={hotRef}
-        startRows={1}
+        startRows={5}
         columns={autoComplete}
-        colWidths={100}
         width="100%"
         startCols={selectedCategory.map((item: any) => item.label).length}
         autoWrapCol={true}
@@ -51,7 +50,19 @@ const HandsonTable = ({
         afterChange={() => {
           if (hotRef.current) {
             const hot = hotRef.current?.hotInstance;
-            setGetDataTable(hot.getData());
+            let changedData=hot.getData();
+            const colAutoComplete=autoComplete.findIndex(el=>el.type==="autocomplete");
+            
+            if(colAutoComplete!=-1) {
+              const localLabs=autoComplete[colAutoComplete].source;
+              changedData=changedData.map((row:any)=> {
+                const labIndex=localLabs.findIndex((el:any)=>el==row[colAutoComplete]);
+                row[colAutoComplete]= labIndex==-1 ? null: labIndex;
+                return row;
+              });
+              console.log(changedData);
+            }
+            setGetDataTable(changedData);
           }
         }}
       />

@@ -269,9 +269,13 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     df<-df%>%mutate_all(as.numeric)
   }
   if("labs" %in% colnames(df)){
+    exceptionCols<-c(char_cols,"group_ID","N")
+    removedCols<-df%>%select(any_of(exceptionCols))
     df<-df%>%mutate(labs=ifelse(!is.na(labs), Labs$ratio[labs], labs))
-    df<-df%>%select(!any_of(char_cols))%>%rowwise()%>%
+   
+    df<-df%>%select(!any_of(exceptionCols))%>%rowwise()%>%
       mutate(across(everything(),~ unit_convert(.,labs)))%>%select(-labs)
+    df<-cbind(removedCols,df)
   }
   mandatory_inputs<-mandatory
   funcIDs<-fromJSON(funcIDs)

@@ -46,9 +46,10 @@ export default function StartPage() {
         setLabData(
           data.data.map((item: any) => ({
             value: item.ID,
-            label: item.Name,
+            label: item.Conversion,
           }))
         );
+        console.log(data);
       });
     });
   }, []);
@@ -148,7 +149,7 @@ export default function StartPage() {
           category: firstInput?.category,
         },
       });
-      console.log(firstInput);
+      
       const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
       setOutputColumns(renamedCols);
       setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
@@ -197,9 +198,11 @@ export default function StartPage() {
       type: sleetedUserIndex[value],
       strict: true,
       source: null,
+      allowInvalid:false
     };
     if (sleetedUserIndex[value] === "autocomplete" && labData) {
-      result.source = labData;
+      result.source = labData.map((el:any)=>el.label);
+      
     }
     return result;
   });
@@ -397,7 +400,7 @@ export default function StartPage() {
             <HotTable
               colHeaders={selectedCategory.map((item: any) => item.label)}
               data={getDataTable}
-              columns={autoComplete}
+           
               autoColumnSize
               autoWrapCol={true}
               rowHeaders={true}
@@ -419,7 +422,7 @@ export default function StartPage() {
                   row[key] === "NA" ? "" : row[key]
                 );
               })}
-              columns={autoComplete}
+             
               autoColumnSize
               autoWrapCol={true}
               rowHeaders={true}
