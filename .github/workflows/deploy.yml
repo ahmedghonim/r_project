@@ -10,8 +10,8 @@ jobs:
       - id: deploy
         uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.1
         with:
-          aws_access_key_id: AKIA45BWB2FSGAH3BBMI
-          aws_secret_access_key: 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
+          aws_access_key_id: 
+          aws_secret_access_key:
           aws_default_region: us-east-1
 
           aws_elb_app_port: 8000 # This should match the docker exposed port. Defaults to 3000.
