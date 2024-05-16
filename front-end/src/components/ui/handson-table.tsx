@@ -37,7 +37,7 @@ const HandsonTable = ({
         autoRowSize
         colHeaders={selectedCategory.map((item: any) => item.label)}
         ref={hotRef}
-        startRows={5}
+        startRows={10}
         allowInsertRow= {true}
         allowInsertColumn= {false}
         allowRemoveColumn= {false}
