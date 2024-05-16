@@ -38,7 +38,10 @@ const HandsonTable = ({
         colHeaders={selectedCategory.map((item: any) => item.label)}
         ref={hotRef}
         startRows={5}
+        allowInsertRow= {true}
         columns={autoComplete}
+        allowInvalid={false}
+        contextMenu={true}
         width="100%"
         startCols={selectedCategory.map((item: any) => item.label).length}
         autoWrapCol={true}
@@ -47,6 +50,16 @@ const HandsonTable = ({
         manualColumnResize={true}
         autoWrapRow={true}
         licenseKey="non-commercial-and-evaluation"
+        afterDocumentKeyDown={(e)=>{
+          if (hotRef.current) {
+            const hot = hotRef.current?.hotInstance;
+            if(e.key=="Insert"){
+             
+            const row= hot.getSelectedLast()[2];
+            hot.alter("insert_row_below", row, 1)
+          }
+          }
+        }}
         afterChange={() => {
           if (hotRef.current) {
             const hot = hotRef.current?.hotInstance;
