@@ -391,7 +391,7 @@ export default function StartPage() {
             </div>
           </div>
         )}
-        {!outputVariables && getDataTable.length > 1 && (
+        {!outputVariables && getDataTable.length >= 1 && (
           <div className="w-full my-6">
             <Text size="tee" variant="white">
               Results
@@ -414,7 +414,7 @@ export default function StartPage() {
         )}
 
         <div className="w-full my-5">
-          {tableResult.length > 1 && (
+          {tableResult.length >= 1 && (
             <HotTable
               colHeaders={outputColumns}
               data={tableResult.map((row: any) => {

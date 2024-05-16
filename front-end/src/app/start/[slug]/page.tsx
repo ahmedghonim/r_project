@@ -32,6 +32,7 @@ export default function StartPage() {
   const [outputVariables, setOutputVariables] = useState<any>(null);
   const [getDataTable, setGetDataTable] = useState<any>([]);
   const [tableResult, setTableResult] = useState<any>([]);
+  const [outputColumns, setOutputColumns]= useState<any>([]);
   const [sleetedUserIndex, setSleetedUserIndex] = useState<any>([]);
   const [availableCategoriesData, setAvailableCategoriesData] = useState<any>(
     []
@@ -88,7 +89,7 @@ export default function StartPage() {
         setLabData(
           data.data.map((item: any) => ({
             value: item.ID,
-            label: item.Name,
+            label: item.Conversion,
           }))
         );
       });
@@ -205,7 +206,10 @@ export default function StartPage() {
           category: firstInput?.category,
         },
       });
-      setTableResult(data);
+      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
+      console.log(data);
+      setOutputColumns(renamedCols);
+      setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
       // save in local storage for later use
       const oldLocalGetDataTable = localStorage.getItem("getDataTable");
 
@@ -253,7 +257,7 @@ export default function StartPage() {
       source: null,
     };
     if (sleetedUserIndex[value] === "autocomplete" && labData) {
-      result.source = labData;
+      result.source = labData.map((el:any)=>el.label);
     }
     return result;
   });
@@ -441,7 +445,7 @@ export default function StartPage() {
             </div>
           </div>
         )}
-        {!outputVariables && getDataTable.length > 1 && (
+        {!outputVariables && getDataTable.length >= 1 && (
           <div className="w-full my-6">
             <Text size="tee" variant="white">
               Results
@@ -463,15 +467,14 @@ export default function StartPage() {
         )}
 
         <div className="w-full my-5">
-          {tableResult.length > 1 && (
+          {tableResult.length >= 1 && (
             <HotTable
-              colHeaders={selectedCategory.map((item: any) => item.label)}
+              colHeaders= {outputColumns}
               data={tableResult.map((row: any) => {
                 return keys(row).map((key) =>
                   row[key] === "NA" ? "" : row[key]
                 );
               })}
-              columns={autoComplete}
               autoColumnSize
               autoWrapCol={true}
               rowHeaders={true}

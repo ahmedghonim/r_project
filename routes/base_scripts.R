@@ -249,7 +249,10 @@ Remove_NA<-function(df){
     }
   }
   if(length(Na_indices)){
-  return (df[-Na_indices,])
+    cn<-colnames(df)
+    df<-as.data.frame(df[-Na_indices,])
+    colnames(df)<-cn
+  return (df)
   }
   else{
     return (df)
@@ -268,6 +271,7 @@ char_cols<-char_cols$internal
 #' @return JSON object containing final result of the api call
 #' @serializer json list(na="string")
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
+  browser()
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
   #find a better way to exclude string variables
@@ -339,9 +343,9 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   }
   else if(c==4){
   
-    valid_rows<-IPD_MeanSD(valid_rows)
-    ready_rows<-ready_rows%>%select(ID,Mean, SD, N)
-    invalid_rows<-invalid_rows%>%select(ID, Mean, SD, N)
+    valid_rows<-IPD_MeanSD(valid_rows)%>%mutate(invalid=0, func="IPD_MeanSD")
+    ready_rows<-ready_rows%>%select(ID,Mean, SD, N, invalid, func)
+    invalid_rows<-invalid_rows%>%select(ID, Mean, SD, N,invalid, func)
   }
   output_df<-rbind(ready_rows,valid_rows, invalid_rows)%>%arrange(ID)
   if(current_prepost && "change_group" %in% colnames(output_df)){
