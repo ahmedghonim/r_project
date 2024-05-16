@@ -49,7 +49,6 @@ export default function StartPage() {
             label: item.Conversion,
           }))
         );
-        console.log(data);
       });
     });
   }, []);
@@ -74,7 +73,6 @@ export default function StartPage() {
         method: "POST",
         body: firstInput,
       });
-      console.log("data >>>> ", data);
       const keys = data[0][1];
       const values = data[0][0];
 

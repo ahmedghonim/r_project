@@ -271,7 +271,6 @@ char_cols<-char_cols$internal
 #' @return JSON object containing final result of the api call
 #' @serializer json list(na="string")
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
-  browser()
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
   #find a better way to exclude string variables

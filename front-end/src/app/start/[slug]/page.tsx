@@ -207,7 +207,6 @@ export default function StartPage() {
         },
       });
       const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
-      console.log(data);
       setOutputColumns(renamedCols);
       setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
       // save in local storage for later use

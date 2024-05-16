@@ -60,7 +60,6 @@ const HandsonTable = ({
                 row[colAutoComplete]= labIndex==-1 ? null: labIndex;
                 return row;
               });
-              console.log(changedData);
             }
             setGetDataTable(changedData);
           }
