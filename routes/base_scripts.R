@@ -241,7 +241,20 @@ unit_convert<-function(x,unit){
     x
   )}
 }
-
+Remove_NA<-function(df){
+  Na_indices<-c()
+  for (row in 1: nrow(df)){
+    if (sum(is.na(df[row, ]))+ sum(which(df[row,]== "NA")) == ncol(df)){
+      Na_indices<-c(Na_indices, row)
+    }
+  }
+  if(length(Na_indices)){
+  return (df[-Na_indices,])
+  }
+  else{
+    return (df)
+  }
+}
 char_cols<-df_names%>%filter(type=="text")
 char_cols<-char_cols$internal
 
@@ -257,7 +270,6 @@ char_cols<-char_cols$internal
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
-  df<-df%>%filter(if_all(everything(), ~ !is.na(.x) ))
   #find a better way to exclude string variables
   if("Study_ID" %in% colnames(df)){
     
@@ -268,6 +280,7 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   else{
     df<-df%>%mutate_all(as.numeric)
   }
+
   if("labs" %in% colnames(df)){
     exceptionCols<-c(char_cols,"group_ID","N")
     removedCols<-df%>%select(any_of(exceptionCols))
@@ -277,6 +290,8 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
       mutate(across(everything(),~ unit_convert(.,labs)))%>%select(-labs)
     df<-cbind(removedCols,df)
   }
+  #Remove empty rows
+  df<-Remove_NA(df)
   mandatory_inputs<-mandatory
   funcIDs<-fromJSON(funcIDs)
   current_outs<-as.vector(fromJSON(current_outputs))
