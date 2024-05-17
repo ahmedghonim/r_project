@@ -72,7 +72,7 @@ const HandsonTable = ({
               const localLabs=autoComplete[colAutoComplete].source;
               changedData=changedData.map((row:any)=> {
                 const labIndex=localLabs.findIndex((el:any)=>el==row[colAutoComplete]);
-                row[colAutoComplete]= labIndex==-1 ? null: labIndex;
+                row[colAutoComplete]= labIndex==-1 ? null: labIndex+1; //Index starts at 1 not 0
                 return row;
               });
             }
