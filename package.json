@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "lodash": "^4.17.21"
+    "@types/mdx": "^2.0.13",
+    "lodash": "^4.17.21",
+    "nextra": "^2.13.4",
+    "nextra-theme-docs": "^2.13.4"
   }
 }

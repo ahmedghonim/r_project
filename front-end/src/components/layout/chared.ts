@@ -13,7 +13,7 @@ export const tabs = [
   },
   {
     name: "Guide",
-    href: "/guide",
+    href: "/docs",
   },
   {
     name: "Cite us",
