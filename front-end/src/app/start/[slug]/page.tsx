@@ -13,11 +13,11 @@ import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-export default function StartPage() {
+export default function StartPage({params}:{params: {slug:string}}) {
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
   const router = useRouter();
-  const { slug } = useParams();
+  const  slug  = params.slug;
 
   registerAllModules();
   const [firstInput, setFirstInput] = useState<any>({
