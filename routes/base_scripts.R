@@ -61,27 +61,57 @@ SE_2N_to_SD<-function(df){
   return(out)
 }
 
+split_df_prepost<-function(df){
+  #change_group=0 ->Pre, change_group=1 ->Post 
+  #invalidate anything that has more than 2 rows or has invalid prepost groups
+  
+  ready_df<-data.frame()
+  if(nrow(df)==2 && sum(df$change_group) == 1){
+    
+    pre_group<-df%>% filter(change_group==0) %>% rename(preMean=Mean, preSD=SD)
+    post_group<-df%>% filter(change_group==1) %>% rename(postMean=Mean, postSD=SD)
+    ready_df<-cbind(pre_group,postMean=post_group$postMean, postSD=post_group$postSD)%>%mutate(invalid=0)
+    
+  }
+  else{
+    ready_df<-df%>%rename(preMean=Mean, preSD=SD)%>%mutate(postMean=NA, postSD=NA, invalid=1)
+  }
+  return (as_tibble(ready_df))
+}
+
 prepare_prepost<-function(df){
+  browser()
+  grouped_by_study<-df%>%group_by(Study_ID)%>%group_split()
+  output_study_list<-list()
+  for (i in 1:length(grouped_by_study)){
+    itm<-grouped_by_study[[i]]
+    if(nrow(itm)<=2){
+      output_study_list<-append(output_study_list, list(split_df_prepost(itm)))
+      
+    } else if (nrow(itm)>2){
+      
+      grouped_by_arm<-df%>%group_by(group_ID)%>%group_split()
+      output_arm_list<-list()
+      for (a in 1:length(grouped_by_arm)){
+        
+        arm<-grouped_by_arm[[a]]
+        output_arm_list<-append(output_arm_list, list(split_df_prepost(arm)))
+          
+ 
+       }
+      append(output_study_list,do.call("rbind",grouped_by_arm))
+    }
   
 
-  #change_group=0 ->Pre, change_group=1 ->Post
-  pre_group<-df%>% filter(change_group==0) %>% rename(preMean=Mean, preSD=SD)
-  post_group<-df%>% filter(change_group==1) %>% rename(postMean=Mean, postSD=SD)
-  percent_group<-df%>% filter(change_group==2) %>% rename(preMean=Mean, preSD=SD) %>%
-                                                            mutate(postMean=preMean + (preMean * percent_change) , postSD=preSD +(preSD  * percent_change))
+  }
+  
+  df<-do.call("rbind", output_study_list)%>%relocate(c("invalid", "func"), .after = last_col())
   
   
-  #arrange studies with groups
-  
-  #Raise an error if unequal number of studies
-  assertthat::are_equal(nrow(pre_group),
-                        nrow(post_group))
-  
-  return(
-    rbind(
-      cbind(pre_group,postMean=post_group$postMean, postSD=post_group$postSD),
-        percent_group
-      )
+  return (
+
+     df
+      
   )
 }
 
@@ -115,10 +145,11 @@ PrePost_to_MeanSD<-function(df){
   
   ccoef=calc_CCoef(prepared_df)
   
-  out<-prepared_df%>%mutate(changeMean=postMean-preMean,
-                            changeSD=sqrt(preSD^2+postSD^2 - 2*preSD*postSD*ccoef),
-                            CC=ccoef)
-  #remove change(Mean, SD) and make a storage version of out
+  
+  
+  out<-prepared_df%>%filter(invalid==0)%>%mutate(changeMean=postMean-preMean,
+                            changeSD=sqrt(preSD^2+postSD^2 - 2*preSD*postSD*ccoef))
+  out<-rbind(out, prepared_df%>%filter(invalid==1))
   return(out)
   
 }
@@ -273,6 +304,7 @@ char_cols<-char_cols$internal
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
+  browser()
   #find a better way to exclude string variables
   if("Study_ID" %in% colnames(df)){
     
@@ -295,12 +327,19 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   }
   #Remove empty rows
   df<-Remove_NA(df)
+  
+  
   mandatory_inputs<-mandatory
-  funcIDs<-fromJSON(funcIDs)
+  funcIDs<-as.vector(fromJSON(funcIDs))
   current_outs<-as.vector(fromJSON(current_outputs))
   output_placeholder_indices<-match(current_outs,colnames(df))
   current_prepost<-fromJSON(current_prepost)
   c<-fromJSON(category)
+  
+  #Remove prepost from func_ID as it's determined by variables as preprocessor in the final step of category 1
+  prepost_indicies<-which(mandatory$Function=="PrePost_to_MeanSD")
+  funcIDs<-funcIDs[!funcIDs %in% prepost_indicies]
+  
   old_colnames<-colnames(df)
   
   if(sum(is.na(output_placeholder_indices))){
@@ -322,11 +361,13 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   ready_rows<-validated_df%>%filter_at(vars(current_outs), all_vars(!is.na(.))) %>% filter(!(ID %in% valid_rows$ID))
   invalid_rows<-validated_df%>%filter(invalid!=0 ,  !(ID %in% ready_rows$ID))
   if (c ==1){
-    for(v in 1:nrow(valid_rows)){
-    
-         valid_rows[v,]<-do.call(valid_rows$func[v], list(valid_rows[v,]))
+      if(nrow(valid_rows)>0){
+      for(v in 1:nrow(valid_rows)){
       
-    }
+           valid_rows[v,]<-do.call(valid_rows$func[v], list(valid_rows[v,]))
+  
+      }
+        }
 
   }
   else if(c == 2){
@@ -346,12 +387,18 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     ready_rows<-ready_rows%>%select(ID,Mean, SD, N, invalid, func)
     invalid_rows<-invalid_rows%>%select(ID, Mean, SD, N,invalid, func)
   }
-  output_df<-rbind(ready_rows,valid_rows, invalid_rows)%>%arrange(ID)
-  if(current_prepost && "change_group" %in% colnames(output_df)){
-    output_df<-PrePost_to_MeanSD(output_df)
+  out_df<-rbind(ready_rows,valid_rows, invalid_rows)%>%arrange(ID)
+  if(current_prepost && "change_group" %in% colnames(out_df)){
+    
+    valid_prepost<-out_df%>%filter(!is.na(change_group),!is.na(Mean), !is.na(SD))
+    invalid_prepost<-out_df%>%filter(!(ID %in% valid_prepost$ID))
+    
+    valid_prepost<-PrePost_to_MeanSD(valid_prepost)
+    
+    out_df<-rbind(valid_prepost,invalid_prepost)%>%arrange(ID) %>% relocate (Study_ID, .after = ID) %>% select(!change_group)
   }
 
-  return(output_df)
+  return(out_df)
   
 }
 

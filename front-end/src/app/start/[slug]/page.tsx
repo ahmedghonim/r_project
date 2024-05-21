@@ -187,7 +187,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
     const values = selectedCategory.map((item: any) => item.value);
 
     const df = getDataTable.map((row: any) => {
-      let newRow = row.map((item: any) => item || "NA");
+      let newRow = row.map((item: any) => item==null? "NA": item);
       newRow = newRow.map((item: any) =>
         typeof item === "number" ? parseFloat(item as any) : item
       );
