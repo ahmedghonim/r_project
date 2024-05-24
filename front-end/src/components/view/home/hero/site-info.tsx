@@ -23,7 +23,7 @@ function Item({
   return (
     <div className="flex flex-col items-start">
       <Text variant="white" size="f2">
-        {number} {operation}
+        {number}{operation}
       </Text>
       <Text variant="white">{label}</Text>
     </div>

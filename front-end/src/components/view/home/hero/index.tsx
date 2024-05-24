@@ -9,14 +9,14 @@ import Link from "next/link";
 
 function Hero() {
   return (
-    <div className="relative flex flex-col items-center h-screen gap-4">
-      <div className="pt-[169px] flex justify-center items-center flex-col gap-4">
+    <div className="relative flex flex-col items-center h-screen gap-4 pt-[20vh]">
+      <div className="py-6 px-8 flex justify-center items-center flex-col gap-4">
         <TextLogo width={192} height={20} />
-        <Text variant="white">Where Data Gets The Treatment IT Deserves</Text>
+        <Text variant="white" >Where Data Gets the Treatment it Deserves</Text>
       </div>
-      <div className="mt-[58px] space-y-5 text-center">
-        <Text variant="default" size="f2" center>
-          Forget About the nightmare of handling multiple data formats
+      <div className="mt-[4vh] space-y-5 text-center">
+        <Text variant="default" size="teb" center>
+          Forget about the nightmare of handling multiple data formats
         </Text>
 
         <Text variant="default" center>
@@ -37,7 +37,7 @@ function Hero() {
           <ArrowDown width={18} height={18} className="stroke-current" />
         </Button>
       </div>
-      <div className="absolute bottom-0  md:left-[-118px] -left-6 md:w-[70%]">
+      <div className="absolute bottom-0 left-[-118px] max-w-[768px] md:w-[70%]">
         <SiteInfo />
       </div>
     </div>

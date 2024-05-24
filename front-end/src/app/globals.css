@@ -245,3 +245,10 @@ th {
 td {
   @apply !bg-[#1E3040] !text-base  !font-bold !text-white !text-center;
 }
+
+@font-face { 
+  font-family: "Mismo"; 
+  src: url('./fonts/mismo.otf'); 
+  font-weight: normal; 
+  font-style: normal; 
+} 

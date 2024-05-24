@@ -20,6 +20,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)"],
+        mismo: ["Mismo", "var(--font-sans)"]
       },
       colors: {
         border: "var(--border)",

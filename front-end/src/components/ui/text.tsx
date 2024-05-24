@@ -21,6 +21,7 @@ const TextVariants = cva(
         fe: "text-2xl md:text-[48px] font-bold",
         f2: "text-xl md:text-[42px] font-bold",
         te: "text-xl md:text-[38px]",
+        teb: "text-xl md:text-[38px] font-bold",
         tee: "text-[28px] font-bold",
         tef: "text-[24px] font-bold",
         default: "md:text-xl text-sm",

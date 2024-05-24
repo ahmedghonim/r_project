@@ -15,7 +15,7 @@ function Nav() {
     <nav className="bg-[#0F182E80] layoutPadding fixed top-0 z-40 inset-x-0 ">
       <div className="grid justify-between w-full grid-cols-12 py-4 mx-auto ">
         <div className="col-span-2 md:flex md:items-center md:gap-12">
-          <Link href="/" className="block text-teal-600">
+          <Link href="/" className="flex flex-col items-center justify-center text-white font-semibold">
             <span className="sr-only">Home</span>
             <Logo width={56} height={51} />
           </Link>

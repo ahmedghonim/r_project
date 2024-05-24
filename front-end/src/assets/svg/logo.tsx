@@ -2,6 +2,7 @@ import React from "react";
 
 const LogoPage = (props: any) => {
   return (
+    <>
     <svg
       {...props}
       xmlns="http://www.w3.org/2000/svg"
@@ -123,6 +124,8 @@ const LogoPage = (props: any) => {
         fill="#F05445"
       />
     </svg>
+    <span className="mt-1">TreatMeta</span>
+    </>
   );
 };
 
