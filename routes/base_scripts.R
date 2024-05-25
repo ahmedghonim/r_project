@@ -80,7 +80,6 @@ split_df_prepost<-function(df){
 }
 
 prepare_prepost<-function(df){
-  browser()
   grouped_by_study<-df%>%group_by(Study_ID)%>%group_split()
   output_study_list<-list()
   for (i in 1:length(grouped_by_study)){
@@ -304,7 +303,6 @@ char_cols<-char_cols$internal
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
-  browser()
   #find a better way to exclude string variables
   if("Study_ID" %in% colnames(df)){
     
