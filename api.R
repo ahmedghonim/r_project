@@ -76,8 +76,7 @@ function(date, message) {
 }
 
 
-Rename_variables<-function(input_params, df_names, current_groups, current_prepost){
-  
+Rename_variables<-function(input_params, df_names, current_groups, current_prepost, category){
   
   inputs<-input_params
   df_names<-df_names
@@ -89,9 +88,11 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
   
-  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) )
+  c=category
   
-  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3)
+  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) , is.na(`category`))
+  
+  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3, `category`== c)
   
   final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
   
@@ -104,9 +105,10 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
 #' @param var_names column names to be renamed
 #' @param current_groups The number of current groups
 #' @param current_prepost Whether there's prepost data
+#' @param category the current category
 #' @return JSON object containing old & new names
 #' @serializer json list(na="string")
-function(var_names, current_groups, current_prepost){
+function(var_names, current_groups, current_prepost, category){
   
   
   inputs<-fromJSON(var_names)
@@ -119,9 +121,12 @@ function(var_names, current_groups, current_prepost){
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)
   
-  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) )
+  c=category
   
-  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3)
+  
+  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`), is.na(`category`) )
+  
+  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3, `category`== c)
   
   final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
   
@@ -160,7 +165,7 @@ function(current_groups, current_prepost, category){
       select(which(colSums(.)>0))
   )
   types<-df_names$type[match(inputs,df_names$internal)]
-  Renamed_vars<-Rename_variables(inputs, df_names, n, pp)
+  Renamed_vars<-Rename_variables(inputs, df_names, n, pp, c)
   
   return(
     list(Renamed_vars,

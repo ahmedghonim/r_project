@@ -3,13 +3,12 @@ source("loadDB.R")
 
 Rename_variables<-function(input_params, df_names, current_groups, current_prepost){
   
-  
   inputs<-input_params
   df_names<-df_names
   
   pp<-current_prepost
   n=current_groups
-  
+
   g1=ifelse(n==1,1,0)
   g2=ifelse(n==2,1,0)
   g3=ifelse(n>2,1,0)

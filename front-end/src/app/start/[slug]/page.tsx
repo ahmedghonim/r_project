@@ -61,7 +61,8 @@ export default function StartPage({params}:{params: {slug:string}}) {
     if (Object.keys(firstInput).length == 3 && slug) {
       handleFirstInput();
       const fInput = currentPresets[+slug];
-      renameVariables(fInput[2], fInput[1], fInput.slice(3)).then(
+      console.log(fInput[2], fInput[1], fInput[0], "there")
+      renameVariables(fInput[2], fInput[1], fInput[0], fInput.slice(3)).then(
         (res: any) => {
           const selectedCategory = fInput.slice(3).map((item: any, i: any) => {
             return { value: item, label: res[i] };
@@ -127,6 +128,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
   async function renameVariables(
     prepost: boolean,
     groups: number,
+    category: number,
     vars: Array<string>
   ) {
     try {
@@ -136,6 +138,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
           var_names: JSON.stringify(vars),
           current_groups: groups,
           current_prepost: prepost,
+          category: category
         },
       });
       return data;
@@ -206,7 +209,8 @@ export default function StartPage({params}:{params: {slug:string}}) {
           category: firstInput?.category,
         },
       });
-      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
+      console.log(firstInput.current_prepost, firstInput.current_groups, firstInput.category,"here")
+      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, firstInput.category, Object.keys(data[0]).slice(1,-2));
       setOutputColumns(renamedCols);
       setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
       // save in local storage for later use

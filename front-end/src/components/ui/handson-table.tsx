@@ -43,7 +43,6 @@ const HandsonTable = ({
         allowRemoveColumn= {false}
         columns={autoComplete}
         allowInvalid={false}
-        contextMenu={true}
         width="100%"
         startCols={selectedCategory.map((item: any) => item.label).length}
         autoWrapCol={true}
@@ -62,6 +61,61 @@ const HandsonTable = ({
           }
           }
         }}
+        contextMenu={{
+          callback(key, selection, clickEvent) {
+            // Common callback for all options
+            console.log(key, selection, clickEvent);
+          },
+          items: {
+            row_above:{
+              name:"Add row above"
+            },
+            row_below:{
+              name:"Add row below"
+            },
+            row_10_below:{
+              name:"Add 10 rows below",
+              callback(key, selection, clickEvent) {
+                if (hotRef.current) {
+                  const hot = hotRef.current?.hotInstance;
+                  const row= hot.getSelectedLast()[2];
+                  hot.alter("insert_row_below", row, 10)
+                }
+              }
+
+            },
+            row_50_below:{
+              name:"Add 50 rows below",
+              callback(key, selection, clickEvent) {
+                if (hotRef.current) {
+                  const hot = hotRef.current?.hotInstance;
+                  const row= hot.getSelectedLast()[2];
+                  hot.alter("insert_row_below", row, 50)
+                }
+              }
+
+            },
+            remove_row:{
+              name:	"Remove row"
+            },
+            sp1:{ name:'---------'},
+            undo:{
+              name:"Undo"
+            },
+            redo:{
+              name:"Redo"
+            },
+            copy:{
+              name:"Copy"
+            },
+            cut:{
+              name:"Cut"
+            }
+
+
+          }
+            
+        }}
         afterChange={() => {
           if (hotRef.current) {
             const hot = hotRef.current?.hotInstance;
@@ -71,9 +125,11 @@ const HandsonTable = ({
             if(colAutoComplete!=-1) {
               const localLabs=autoComplete[colAutoComplete].source;
               changedData=changedData.map((row:any)=> {
+
                 const labIndex=localLabs.findIndex((el:any)=>el==row[colAutoComplete]);
-                row[colAutoComplete]= labIndex==-1 ? null: labIndex+1; //Index starts at 1 not 0
+                row[colAutoComplete]= labIndex==-1 ? null: labIndex + 1; //Index starts at 1 not 0
                 return row;
+
               });
             }
             setGetDataTable(changedData);

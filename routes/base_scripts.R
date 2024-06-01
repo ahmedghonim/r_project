@@ -5,7 +5,7 @@ Ci_N_to_SD<-function(df){
   
   ci<-0.95
   if("CI%" %in% colnames(df)){
-    ci<-ifelse(is.na(df$`CI%`),0.95,df$`CI%`[1])
+    ci<-ifelse(is.na(df$`CI_percent`),0.95,df$`CI%`[1])
   }
   out<-df%>%
     mutate(SD=sqrt(N) * (ulci-llci) / ifelse(N>=100, 3.92, 2*tinv(1-ci,N-1) ) )
@@ -45,7 +45,7 @@ Pval_2N_to_SD<-function(df){
 
 Ci_2N_to_SD<-function(df){
   ci<-0.95
-  if("CI%" %in% colnames(df)){
+  if("CI_percent" %in% colnames(df)){
     ci<-ifelse(is.na(df$`CI%`),0.95,df$`CI%`[1])
   }
   out<-df%>%
@@ -162,6 +162,15 @@ calculate_prop<-function(df){
   
 }
 
+calculate_sm<-function(df){
+  m.mean<-metamean(N,Mean,SD,studlab = Study_ID ,df)
+  df$TE=m.mean$TE
+  df$seTE=m.mean$seTE
+  return  (df)
+  
+  
+}
+
 prepare_groups<-function(df, data_type){
   
   
@@ -271,6 +280,18 @@ unit_convert<-function(x,unit){
     x
   )}
 }
+apply_labs<-function(df){
+  exceptionCols<-c(char_cols,"group_ID","N")
+  removedCols<-df%>%select(any_of(exceptionCols))
+  df<-df%>%mutate(labs=ifelse(!is.na(labs), Labs$ratio[labs], labs))
+  
+  df<-df%>%select(!any_of(exceptionCols))%>%rowwise()%>%
+    mutate(across(everything(),~ unit_convert(.,labs)))%>%select(-labs)
+  df<-cbind(removedCols,df)
+  return(
+    df
+    )
+}
 Remove_NA<-function(df){
   Na_indices<-c()
   for (row in 1: nrow(df)){
@@ -315,13 +336,7 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   }
 
   if("labs" %in% colnames(df)){
-    exceptionCols<-c(char_cols,"group_ID","N")
-    removedCols<-df%>%select(any_of(exceptionCols))
-    df<-df%>%mutate(labs=ifelse(!is.na(labs), Labs$ratio[labs], labs))
-   
-    df<-df%>%select(!any_of(exceptionCols))%>%rowwise()%>%
-      mutate(across(everything(),~ unit_convert(.,labs)))%>%select(-labs)
-    df<-cbind(removedCols,df)
+   df<-apply_labs(df)
   }
   #Remove empty rows
   df<-Remove_NA(df)
@@ -365,15 +380,18 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
            valid_rows[v,]<-do.call(valid_rows$func[v], list(valid_rows[v,]))
   
       }
-        }
+      }
+    valid_rows<-do.call("rbind", grouped_rows)%>%select(any_of(ID, Study_ID, Mean, SD,invalid, func))
+    ready_rows<-ready_rows%>%select(any_of(ID, Study_ID,  Mean, SD,invalid, func))
+    invalid_rows<-invalid_rows%>%select(any_of(ID, Study_ID,  Mean, SD,invalid, func))
 
   }
   else if(c == 2){
     grouped_rows<-valid_rows%>%group_by(func)%>%group_split()
     grouped_rows<-lapply(grouped_rows, function(df) do.call(df$func[1], list(df)))
-    valid_rows<-do.call("rbind", grouped_rows)
-    ready_rows<-ready_rows%>%select(ID, Study_ID, TE, seTE,invalid, func)
-    invalid_rows<-invalid_rows%>%select(ID, Study_ID, TE, seTE,invalid, func)
+    valid_rows<-do.call("rbind", grouped_rows)%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
+    ready_rows<-ready_rows%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
+    invalid_rows<-invalid_rows%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
   }
   else if(c==3){
     
@@ -384,6 +402,11 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     valid_rows<-IPD_MeanSD(valid_rows)%>%mutate(invalid=0, func="IPD_MeanSD")
     ready_rows<-ready_rows%>%select(ID,Mean, SD, N, invalid, func)
     invalid_rows<-invalid_rows%>%select(ID, Mean, SD, N,invalid, func)
+  }
+  else if(c==5){
+    valid_rows<-valid_rows%>%mutate(lab_output=lab_apply)%>%select(ID,lab_output,invalid, func)
+    ready_rows<-ready_rows%>%mutate(lab_output=lab_apply)%>%select(ID,lab_output,invalid, func)
+    invalid_rows<-invalid_rows%>%mutate(lab_output=lab_apply)%>%select(ID,lab_output,invalid, func)
   }
   out_df<-rbind(ready_rows,valid_rows, invalid_rows)%>%arrange(ID)
   if(current_prepost && "change_group" %in% colnames(out_df)){

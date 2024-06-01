@@ -53,13 +53,14 @@ export default function StartPage() {
     });
   }, []);
     //Rename variables
-    async function renameVariables(prepost:boolean, groups: number, vars:Array<string>) {
+    async function renameVariables(prepost:boolean, groups: number, category:number, vars:Array<string>) {
       try {
         const { data } = await fetchData<any>("/Rename_variables", {
           method: "POST",
           body: {var_names:JSON.stringify(vars), 
                   current_groups:groups, 
-                  current_prepost:prepost},
+                  current_prepost:prepost,
+                  category:category},
         });
         return data;
         
@@ -148,7 +149,7 @@ export default function StartPage() {
         },
       });
       
-      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, Object.keys(data[0]).slice(1,-2));
+      const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, firstInput.category, Object.keys(data[0]).slice(1,-2));
       setOutputColumns(renamedCols);
       setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
       // save in local storage for later use
