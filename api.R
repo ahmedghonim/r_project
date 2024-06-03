@@ -79,10 +79,11 @@ function(date, message) {
 Rename_variables<-function(input_params, df_names, current_groups, current_prepost, category){
   
   inputs<-input_params
+  inputs<-unlist(lapply(str_split(inputs," "), FUN = function(x) x[[1]]))
   df_names<-df_names
   
   pp<-current_prepost
-  n=current_groups
+  n=as.numeric(current_groups)
   
   g1=ifelse(n==1,1,0)
   g2=ifelse(n==2,1,0)
@@ -110,12 +111,11 @@ Rename_variables<-function(input_params, df_names, current_groups, current_prepo
 #' @serializer json list(na="string")
 function(var_names, current_groups, current_prepost, category){
   
-  
   inputs<-fromJSON(var_names)
-
+  inputs<-unlist(lapply(str_split(inputs," "), FUN = function(x) x[[1]]))
   
   pp<-current_prepost
-  n=current_groups
+  n=as.numeric(current_groups)
   
   g1=ifelse(n==1,1,0)
   g2=ifelse(n==2,1,0)

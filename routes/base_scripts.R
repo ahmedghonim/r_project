@@ -373,6 +373,7 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   valid_rows<-validated_df%>%filter(invalid==0)
   ready_rows<-validated_df%>%filter_at(vars(current_outs), all_vars(!is.na(.))) %>% filter(!(ID %in% valid_rows$ID))
   invalid_rows<-validated_df%>%filter(invalid!=0 ,  !(ID %in% ready_rows$ID))
+  browser()
   if (c ==1){
       if(nrow(valid_rows)>0){
       for(v in 1:nrow(valid_rows)){
@@ -381,17 +382,17 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   
       }
       }
-    valid_rows<-do.call("rbind", grouped_rows)%>%select(any_of(ID, Study_ID, Mean, SD,invalid, func))
-    ready_rows<-ready_rows%>%select(any_of(ID, Study_ID,  Mean, SD,invalid, func))
-    invalid_rows<-invalid_rows%>%select(any_of(ID, Study_ID,  Mean, SD,invalid, func))
+    valid_rows<-valid_rows%>%select(any_of(c("ID", "Study_ID", "group_ID", "Mean", "SD","invalid", "func")))
+    ready_rows<-ready_rows%>%select(any_of(c("ID", "Study_ID", "group_ID", "Mean", "SD","invalid", "func")))
+    invalid_rows<-invalid_rows%>%select(any_of(c("ID", "Study_ID", "group_ID", "Mean", "SD","invalid", "func")))
 
   }
   else if(c == 2){
     grouped_rows<-valid_rows%>%group_by(func)%>%group_split()
     grouped_rows<-lapply(grouped_rows, function(df) do.call(df$func[1], list(df)))
-    valid_rows<-do.call("rbind", grouped_rows)%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
-    ready_rows<-ready_rows%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
-    invalid_rows<-invalid_rows%>%select(any_of(ID, Study_ID, TE, seTE,invalid, func))
+    valid_rows<-do.call("rbind", grouped_rows)%>%select(any_of(c("ID", "Study_ID", "TE", "seTE","invalid", "func")))
+    ready_rows<-ready_rows%>%select(any_of(c("ID", "Study_ID", "TE", "seTE","invalid", "func")))
+    invalid_rows<-invalid_rows%>%select(any_of(c("ID", "Study_ID", "TE", "seTE","invalid", "func")))
   }
   else if(c==3){
     
@@ -417,6 +418,28 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     valid_prepost<-PrePost_to_MeanSD(valid_prepost)
     
     out_df<-rbind(valid_prepost,invalid_prepost)%>%arrange(ID) %>% relocate (Study_ID, .after = ID) %>% select(!change_group)
+  }
+  if("group_ID" %in% colnames(out_df) && category == 1){
+    ma<-max(out_df$group_ID)
+    na_df<-out_df%>%filter(is.na(group_ID))%>%mutate(group_ID=1)
+    g_df<-out_df%>%filter(!is.na(group_ID))%>%arrange(Study_ID,ID)
+    ma<-max(g_df$group_ID)
+    g_df<-rbind(g_df, na_df)%>%select(-ID)
+    g_df<-g_df%>%pivot_wider(names_from = group_ID, values_from = c(Mean,SD), names_glue = "{.value} {group_ID}", names_sort = TRUE)%>%arrange(Study_ID)
+    
+    
+    
+    paircols<-list()
+    
+    for( i in 1:ma){
+      paircols<-append(paircols,list(c(paste("Mean", i), paste("SD", i))))
+    }
+    out_df <- reduce(
+      .x = paircols, 
+      .f = ~ relocate(.x, .y[1], .before = .y[2]),
+      .init = g_df
+    ) %>%relocate(c(invalid, func), .after = last_col())%>%rowid_to_column("ID")
+    
   }
 
   return(out_df)
