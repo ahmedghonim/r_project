@@ -19,7 +19,7 @@ if(!require("devtools")){
   library(devtools)
 }
 if(!require("utilities")){
-  install_version("utilities", version = "0.6.1", repos = "http://cran.us.r-project.org")
+  install.packages("https://cran.r-project.org/src/contrib/Archive/utilities/utilities_0.6.1.tar.gz", repos = NULL, type = "source")
   library(utilities)
 }
 if(!require("DBI")){
