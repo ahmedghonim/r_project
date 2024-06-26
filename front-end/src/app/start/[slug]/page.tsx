@@ -157,6 +157,8 @@ export default function StartPage({params}:{params: {slug:string}}) {
         body: {
           user_inputs: JSON.stringify(categoryValue),
           input_params: JSON.stringify(inputParams),
+          current_prepost: firstInput.current_prepost,
+          category: firstInput?.category,
         },
       });
       setFuncIdsValues(data);

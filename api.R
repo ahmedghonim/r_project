@@ -180,12 +180,16 @@ function(current_groups, current_prepost, category){
 #' @post /api/Func_IDs
 #' @param input_params JSON object of The IDs from eligible_functions
 #' @param user_inputs JSON object of The dataframe containing user-chosen input variables
+#' @param current_prepost JSON object of The dataframe containing user-chosen input variables
+#' @param category JSON object of The dataframe containing user-chosen input variables
 #' @serializer json list(na="string")
-function(input_params, user_inputs){
+function(input_params, user_inputs, current_prepost, category){
   funcs<-fromJSON(input_params)
   outs<-fromJSON(user_inputs)
+  pp<-fromJSON(current_prepost)
+  cat<-fromJSON(category)
   output<- output_df
-  available_funcs<-mandatory[funcs,]%>% select(1,8:ncol(mandatory))
+  available_funcs<-mandatory[funcs,]%>%filter(`prepost`==pp, `category` == cat)%>% select(1,8:ncol(mandatory))
   available_funcs<- available_funcs %>%  rowwise() %>% 
     mutate(original=sum( c_across(2: ncol(available_funcs) ) ), current=0 )
   cols<- match(outs, colnames(available_funcs))
@@ -211,7 +215,6 @@ function(input_params, user_inputs){
 #' @return JSON object containing output variables
 #' @serializer json list(na="string")
 function(funcIDs){
-  
   final_iDs<-fromJSON(funcIDs)
   output<- output_df
   
