@@ -68,10 +68,11 @@ split_df_prepost<-function(df){
   
   ready_df<-data.frame()
   if(nrow(df)==2 && sum(df$change_group) == 1){
-    
+    df<-calc_CCoef(df)
     pre_group<-df%>% filter(change_group==0) %>% rename(preMean=Mean, preSD=SD)
     post_group<-df%>% filter(change_group==1) %>% rename(postMean=Mean, postSD=SD)
     ready_df<-cbind(pre_group,postMean=post_group$postMean, postSD=post_group$postSD)%>%mutate(invalid=0, func="PrePost_to_MeanSD")
+    
     
   }
   else{
@@ -169,7 +170,7 @@ calc_CCoef<-function(df){
     cc_def<-mean(change_sd$CC)
   }
   
-  return(cc_def)
+  return(df%>%mutate(ccoef=cc_def))
 }
 
 
@@ -178,7 +179,7 @@ PrePost_to_MeanSD<-function(df){
   #change into pre, post Means and SDs
   prepared_df<-prepare_prepost(df)
   
-  ccoef=calc_CCoef(prepared_df)
+
   
   
   
@@ -412,7 +413,7 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
     colnames(df)<-c(current_outs[is.na(output_placeholder_indices)], old_colnames)
   }
   validated_df<-Validate_requirements(funcIDs, df, mandatory_inputs, current_prepost)%>%rowid_to_column("ID")
-  
+
   valid_rows<-validated_df%>%filter(invalid==0)
   ready_rows<-validated_df%>%filter_at(vars(current_outs), all_vars(!is.na(.))) %>% filter(!(ID %in% valid_rows$ID))
   invalid_rows<-validated_df%>%filter(invalid!=0 ,  !(ID %in% ready_rows$ID))
