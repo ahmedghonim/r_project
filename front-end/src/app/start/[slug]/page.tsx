@@ -8,7 +8,6 @@ import { registerAllModules } from "handsontable/registry";
 import HandsonTable from "@/components/ui/handson-table";
 import { Input } from "@/components/ui/input";
 import { fetchData } from "@/lib/fetchData";
-import { getPresets } from "@/lib/imports";
 import Select from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
