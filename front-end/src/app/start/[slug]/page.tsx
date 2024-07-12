@@ -42,10 +42,6 @@ export default function StartPage({params}:{params: {slug:string}}) {
   const [category, setCategory] = useState([]);
   const [labData, setLabData] = useState<any>([]);
   useEffect(() => {
-    // fetchData("/presets").then((res: any) => {
-    //   setCurrentPresets(res.data);
-      
-    // });
     setCurrentPresets(presets);
     console.log(presets)
 
@@ -435,7 +431,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
               {
                 (
                   <Button
-                  className="h-[54px] mr-2"
+                  className="h-[54px] mx-2"
                   onClick={() => {
                     setTableResult([]);
                   }}
