@@ -223,6 +223,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
       const renamedCols= await renameVariables(firstInput.current_prepost, firstInput.current_groups, firstInput.category, Object.keys(data[0]).slice(1,-2));
       setOutputColumns(renamedCols);
       setTableResult(data.map((el:any)=> zipObject( Object.keys(el).slice(1,-2), Object.values(el).slice(1,-2))));
+      
       // save in local storage for later use
       const oldLocalGetDataTable = localStorage.getItem("getDataTable");
 
@@ -413,25 +414,6 @@ export default function StartPage({params}:{params: {slug:string}}) {
                 >
                   Next
                 </Button>
-                <Button
-                  className="w-full h-[54px]"
-                  onClick={() => {
-                    setFirstInput({
-                      current_prepost: "0",
-                    });
-                    setCategory([]);
-                    setSelectedCategory([]);
-                    setSelectTypes([]);
-                    setInputParams([]);
-                    setFuncIdsValues([]);
-                    setOutputVariables(null);
-                    setGetDataTable([]);
-                    setTableResult([]);
-                  }}
-                  variant="ghost"
-                >
-                  Reset
-                </Button>
               </div>
             </div>
           )}
@@ -442,12 +424,29 @@ export default function StartPage({params}:{params: {slug:string}}) {
               <Text size="tee" variant="white">
                 Convert your data here
               </Text>
+              <div className="flex">
 
               {tableResult.length < 1 && (
-                <Button className="h-[54px]" onClick={handleScripts}>
+               <Button className="h-[54px]" onClick={handleScripts}>
                   Submit
                 </Button>
+
+
               )}
+              {
+                (
+                  <Button
+                  className="h-[54px] mr-2"
+                  onClick={() => {
+                    setTableResult([]);
+                  }}
+                >
+                  Reset
+                </Button>
+                )
+              }
+              
+              </div>
             </div>
             <div className="w-full my-5 ">
               <HandsonTable

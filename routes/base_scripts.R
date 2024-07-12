@@ -367,7 +367,6 @@ char_cols<-char_cols$internal
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
-  browser()
   #find a better way to exclude string variables
   if(sum(char_cols %in% colnames(df))>0){
     
