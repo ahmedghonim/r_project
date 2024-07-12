@@ -50,7 +50,9 @@ export default function StartPage({params}:{params: {slug:string}}) {
     // });
     getPresets().then((res:any)=>{
     setCurrentPresets(res.objectData.presets);
+    console.log(res.objectData.presets)
     });
+
     
 
   }, [slug]);
