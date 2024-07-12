@@ -5,7 +5,7 @@ export const tabs = [
   },
   {
     name: "Start",
-    href: "/start",
+    href: "/start/default",
   },
   {
     name: "About us",

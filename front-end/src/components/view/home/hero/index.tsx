@@ -25,7 +25,7 @@ function Hero() {
         </Text>
       </div>
       <div className="flex items-center gap-3 mt-[28px]">
-        <Link href="/start">
+        <Link href="/start/default">
           <Button className="min-w-[155px]">Get Start</Button>
         </Link>
         <Button

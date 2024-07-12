@@ -285,7 +285,7 @@ Validate_requirements<-function(funcIDs, df, mandatory, pp){
   #assign the proper function ID to valid entries
   
   df<-df%>%mutate(invalid=0, func="")
-  available_funcs<-mandatory[funcIDs,]%>% select(1,8:ncol(mandatory))
+  available_funcs<-mandatory[funcIDs,]%>% select(-Function, -condition, -category)
   available_funcs<- available_funcs %>%  rowwise() %>% 
     mutate(original=sum( c_across(2: ncol(available_funcs) ) ), current=0 )
   
@@ -367,9 +367,9 @@ char_cols<-char_cols$internal
 Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category ){
   #make sure output columns exist in data // pre-processing step
   df<-fromJSON(df)
-
+  browser()
   #find a better way to exclude string variables
-  if("Study_ID" %in% colnames(df)){
+  if(sum(char_cols %in% colnames(df))>0){
     
     
   df<-cbind(df%>%select(all_of(char_cols)),
@@ -393,12 +393,12 @@ Task_manager<-function( df, funcIDs, current_outputs, current_prepost, category 
   current_prepost<-fromJSON(current_prepost)
   c<-fromJSON(category)
   
-  #Remove prepost from func_ID as it's determined by variables as preprocessor in the final step of category 1
+  #Remove prepost from func_ID as it's determined by variables as a post-processor in the final step of category 1
   prepost_indicies<-which(mandatory$Function=="PrePost_to_MeanSD")
   funcIDs<-funcIDs[!funcIDs %in% prepost_indicies]
   
   old_colnames<-colnames(df)
-  
+  #prepare columns for output variables if they aren't in the user input df
   if(sum(is.na(output_placeholder_indices))){
     for(out in 1:length(output_placeholder_indices)){
       

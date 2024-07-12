@@ -61,41 +61,25 @@ function(){
   return(out_presets)
 }
 
-
-
-
-#' this is a test for api
-#' @post /api/post_message
-#' @param date The date parameter (format: "YYYY-MM-DD")
-#' @param message The message parameter
-#' @return JSON object with the provided date and message
-#' @serializer json
-function(date, message) {
-  response <- list(date = date, message = message)
-  return(response)
-}
-
-
 Rename_variables<-function(input_params, df_names, current_groups, current_prepost, category){
-  
   inputs<-input_params
+  #Ignore trailing numbers
   inputs<-unlist(lapply(str_split(inputs," "), FUN = function(x) x[[1]]))
   df_names<-df_names
   
   pp<-current_prepost
   n=as.numeric(current_groups)
   
-  g1=ifelse(n==1,1,0)
-  g2=ifelse(n==2,1,0)
-  g3=ifelse(n>2,1,0)
+
   
   c=category
+  conditional<-paste0("C",c,"_G",ifelse(n>2,3,n),"_P", pp)
   
-  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`) , is.na(`category`))
+  conditional_names<-df_names%>%filter(condition==conditional)
+  default_names<-df_names%>%filter( condition=="D", !(internal %in% conditional_names$internal))
   
-  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3, `category`== c)
   
-  final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
+  final_names<-rbind(conditional_names, default_names) %>% arrange(ID)
   
   inds<-match(inputs,final_names$internal)
   return (rbind(inputs,final_names$ui[inds]))
@@ -116,22 +100,10 @@ function(var_names, current_groups, current_prepost, category){
   
   pp<-current_prepost
   n=as.numeric(current_groups)
-  
-  g1=ifelse(n==1,1,0)
-  g2=ifelse(n==2,1,0)
-  g3=ifelse(n>2,1,0)
-  
   c=category
-  
-  
-  neutral_names<-df_names%>%filter( is.na(`prepost`), is.na(`group_1`), is.na(`group_2`),  is.na(`group_3.`), is.na(`category`) )
-  
-  variable_names<-df_names%>%filter(`prepost`== pp,`group_1` == g1, `group_2` == g2, `group_3.`== g3, `category`== c)
-  
-  final_names<-rbind(variable_names, neutral_names) %>% arrange(ID)
-  
-  inds<-match(inputs,final_names$internal)
-  return (final_names$ui[inds])
+  Renamed_vars<-Rename_variables(inputs, df_names, n, pp, c)
+
+  return (Renamed_vars[2,])
   
 }
 
@@ -148,24 +120,18 @@ function(current_groups, current_prepost, category){
   n=fromJSON(current_groups)
   c<-fromJSON((category))
   
-  g1=ifelse(n==1,1,0)
-  g2=ifelse(n==2,1,0)
-  g3=ifelse(n>2,1,0)
+  conditional<-paste0("C",c,"_G",ifelse(n>2,3,n),"_P", pp)
+  eligible_functions<-mandatory%>%filter(`condition`==conditional) %>% select(`ID`,`Function`)
   
-  eligible_functions<-mandatory%>%filter(`group_1` == g1, `group_2` == g2, `group_3.`== g3, category == c) %>% select(`ID`,`Function`)
-  
-  inds=match(eligible_functions$`Function`,available$`Function`)
-  
-
-  
-  final_df<-available[inds,]
+  final_df<-available%>%filter(`condition`==conditional)
   inputs<-colnames(
     final_df%>%
-      select(2:ncol(final_df)) %>%
+      select(-ID, -Function, -condition) %>%
       select(which(colSums(.)>0))
   )
   types<-df_names$type[match(inputs,df_names$internal)]
   Renamed_vars<-Rename_variables(inputs, df_names, n, pp, c)
+  
   
   return(
     list(Renamed_vars,
@@ -173,8 +139,6 @@ function(current_groups, current_prepost, category){
   )
   
 }  
-
-
 
 #' Check if user inputs satisfies mandatory functions' parameters
 #' @post /api/Func_IDs
@@ -186,10 +150,8 @@ function(current_groups, current_prepost, category){
 function(input_params, user_inputs, current_prepost, category){
   funcs<-fromJSON(input_params)
   outs<-fromJSON(user_inputs)
-  pp<-fromJSON(current_prepost)
-  cat<-fromJSON(category)
-  output<- output_df
-  available_funcs<-mandatory[funcs,]%>%filter(`prepost`==pp, `category` == cat)%>% select(1,8:ncol(mandatory))
+
+  available_funcs<-mandatory[funcs,]%>%select(-Function, -condition, -category)
   available_funcs<- available_funcs %>%  rowwise() %>% 
     mutate(original=sum( c_across(2: ncol(available_funcs) ) ), current=0 )
   cols<- match(outs, colnames(available_funcs))
@@ -225,7 +187,7 @@ function(funcIDs){
     list(
       colnames(
         output[out_iDs,]%>%
-          select(2:ncol(output)) %>%
+          select(-ID, -Function) %>%
           select(which(colSums(.)>0))
       )
     )

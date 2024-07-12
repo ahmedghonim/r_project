@@ -8,10 +8,12 @@ import { registerAllModules } from "handsontable/registry";
 import HandsonTable from "@/components/ui/handson-table";
 import { Input } from "@/components/ui/input";
 import { fetchData } from "@/lib/fetchData";
+import { getPresets } from "@/lib/imports";
 import Select from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+
 
 export default function StartPage({params}:{params: {slug:string}}) {
   const searchParams = useSearchParams();
@@ -42,29 +44,35 @@ export default function StartPage({params}:{params: {slug:string}}) {
   const [category, setCategory] = useState([]);
   const [labData, setLabData] = useState<any>([]);
   useEffect(() => {
-    fetchData("/presets").then((res: any) => {
-      setCurrentPresets(res.data);
+    // fetchData("/presets").then((res: any) => {
+    //   setCurrentPresets(res.data);
+      
+    // });
+    getPresets().then((res:any)=>{
+    setCurrentPresets(res.objectData.presets);
     });
+    
+
   }, [slug]);
   useEffect(() => {
-    if (slug && currentPresets.length > 3) {
-      const fInput = currentPresets[+slug];
+    if (slug !=="default" && currentPresets.length > 0) {
+      const fInput = currentPresets.find((x:any)=>x.ID==slug);
       setFirstInput({
-        current_groups: fInput[1],
-        category: fInput[0],
-        current_prepost: fInput[2],
+        current_groups: fInput.groups+"",
+        category: fInput.category+"",
+        current_prepost: fInput.prepost+""
       });
     }
   }, [currentPresets]);
 
   useEffect(() => {
-    if (Object.keys(firstInput).length == 3 && slug) {
+    if (Object.keys(firstInput).length == 3 && slug !=="default") {
       handleFirstInput();
-      const fInput = currentPresets[+slug];
-      console.log(fInput[2], fInput[1], fInput[0], "there")
-      renameVariables(fInput[2], fInput[1], fInput[0], fInput.slice(3)).then(
+      const fInput = currentPresets.find((x:any)=>x.ID==slug);
+      console.log(fInput.prepost, fInput.groups, fInput.category, "there")
+      renameVariables(fInput.prepost, fInput.groups, fInput.category, fInput.colnames).then(
         (res: any) => {
-          const selectedCategory = fInput.slice(3).map((item: any, i: any) => {
+          const selectedCategory = fInput.colnames.map((item: any, i: any) => {
             return { value: item, label: res[i] };
           });
           setSelectedCategory(selectedCategory);
@@ -73,7 +81,7 @@ export default function StartPage({params}:{params: {slug:string}}) {
     }
   }, [firstInput]);
   useEffect(() => {
-    if (inputParams && selectedCategory && slug) {
+    if (inputParams && selectedCategory && slug !=="default") {
       handleFunc_IDs();
     }
   }, [inputParams, selectedCategory]);

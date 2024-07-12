@@ -10,7 +10,7 @@ import Link from "next/link";
 
 function OurConversions() {
   const mData = {
-    id: 0,
+    id: "MeanSdOps",
     icon: Icon1,
     title: "Mean and standard deviation (SD) conversions",
     list: [
@@ -25,7 +25,7 @@ function OurConversions() {
 
   const data = [
     {
-      id: 2,
+      id: "TeSe",
       icon: Icon2,
       title: "Effect size estimation",
       list: [
@@ -36,20 +36,20 @@ function OurConversions() {
       ],
     },
     {
-      id: 6,
+      id: "IPD",
       icon: Icon3,
       title: "Mean and SD calculation",
       list: ["From data for each patient into mean and SD"],
     },
 
     {
-      id: 5,
+      id: "CombineMeans",
       icon: Icon4,
       title: "Mean and SD combination",
       list: ["From two or more groups into single mean and SD"],
     },
     {
-      id: 3,
+      id: "Labs",
       icon: Icon5,
       title: "Units and labs conversions",
       list: [
@@ -102,7 +102,7 @@ function Item({
   isPrimary,
   id,
 }: {
-  id: number | null;
+  id: string | null;
   icon: any;
   title: string;
   list: string[];
